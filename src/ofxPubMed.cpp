@@ -20,7 +20,7 @@ void ofxPubMed::setup(){
     sBasicCitation = "ecitmatch.cgi?db=pubmed&rettype=xml&bdata=";
     sSpaceCit =  "%0D";
     sSpaceWords = "|";
-    sAnd = " AND ";
+    sAnd = "+AND+";
     sTerm = "&term=";
 }
 
@@ -113,10 +113,10 @@ void ofxPubMed::keyPressed(int key){
     
     //Progressive request, First 4, then 5, then RETURN
     else if(key == '4'){
-        starteSearchRequest("ultimate", "[All Fields]");
+        starteSearchRequest("ultimate", "[All%20Fields]");
     }
     else if(key == '5'){
-        addSimpleTagRequest("sport", "[All Fields]");
+        addSimpleTagRequest("sport", "[All%20Fields]");
     }
     //After this Ckeck: file.xml for results // todo : Draw result in the screen
     else if(key == OF_KEY_RETURN){
