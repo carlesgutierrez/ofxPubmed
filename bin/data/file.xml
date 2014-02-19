@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "http://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+<eSearchResult>
+    <Count>208</Count>
+    <RetMax>20</RetMax>
+    <RetStart>0</RetStart>
+    <IdList>
+        <Id>24421728</Id>
+        <Id>24373364</Id>
+        <Id>24303697</Id>
+        <Id>24196459</Id>
+        <Id>23764175</Id>
+        <Id>23745285</Id>
+        <Id>23724775</Id>
+        <Id>23548600</Id>
+        <Id>23360179</Id>
+        <Id>23244057</Id>
+        <Id>23110981</Id>
+        <Id>22967730</Id>
+        <Id>22903317</Id>
+        <Id>22860499</Id>
+        <Id>22728942</Id>
+        <Id>22694808</Id>
+        <Id>22272517</Id>
+        <Id>22239860</Id>
+        <Id>22217569</Id>
+        <Id>22198161</Id>
+    </IdList>
+    <TranslationSet>
+        <Translation>
+            <From>#hand</From>
+            <To>&quot;hand&quot;[MeSH Terms] OR &quot;hand&quot;[All Fields]</To>
+        </Translation>
+        <Translation>
+            <From>sports</From>
+            <To>&quot;sports&quot;[MeSH Terms] OR &quot;sports&quot;[All Fields]</To>
+        </Translation>
+        <Translation>
+            <From>water</From>
+            <To>&quot;water&quot;[MeSH Terms] OR &quot;water&quot;[All Fields] OR &quot;drinking water&quot;[MeSH Terms] OR (&quot;drinking&quot;[All Fields] AND &quot;water&quot;[All Fields]) OR &quot;drinking water&quot;[All Fields]</To>
+        </Translation>
+    </TranslationSet>
+    <TranslationStack>
+        <TermSet>
+            <Term>&quot;hand&quot;[MeSH Terms]</Term>
+            <Field>MeSH Terms</Field>
+            <Count>66716</Count>
+            <Explode>Y</Explode>
+        </TermSet>
+        <TermSet>
+            <Term>&quot;hand&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>325142</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <OP>OR</OP>
+        <OP>GROUP</OP>
+        <TermSet>
+            <Term>&quot;sports&quot;[MeSH Terms]</Term>
+            <Field>MeSH Terms</Field>
+            <Count>122943</Count>
+            <Explode>Y</Explode>
+        </TermSet>
+        <TermSet>
+            <Term>&quot;sports&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>98384</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <OP>OR</OP>
+        <OP>GROUP</OP>
+        <OP>AND</OP>
+        <TermSet>
+            <Term>&quot;water&quot;[MeSH Terms]</Term>
+            <Field>MeSH Terms</Field>
+            <Count>119038</Count>
+            <Explode>Y</Explode>
+        </TermSet>
+        <TermSet>
+            <Term>&quot;water&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>640619</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <OP>OR</OP>
+        <TermSet>
+            <Term>&quot;drinking water&quot;[MeSH Terms]</Term>
+            <Field>MeSH Terms</Field>
+            <Count>1563</Count>
+            <Explode>Y</Explode>
+        </TermSet>
+        <OP>OR</OP>
+        <TermSet>
+            <Term>&quot;drinking&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>119698</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <TermSet>
+            <Term>&quot;water&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>640619</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <OP>AND</OP>
+        <OP>GROUP</OP>
+        <OP>OR</OP>
+        <TermSet>
+            <Term>&quot;drinking water&quot;[All Fields]</Term>
+            <Field>All Fields</Field>
+            <Count>33941</Count>
+            <Explode>N</Explode>
+        </TermSet>
+        <OP>OR</OP>
+        <OP>GROUP</OP>
+        <OP>AND</OP>
+    </TranslationStack>
+    <QueryTranslation>(&quot;hand&quot;[MeSH Terms] OR &quot;hand&quot;[All Fields]) AND (&quot;sports&quot;[MeSH Terms] OR &quot;sports&quot;[All Fields]) AND (&quot;water&quot;[MeSH Terms] OR &quot;water&quot;[All Fields] OR &quot;drinking water&quot;[MeSH Terms] OR (&quot;drinking&quot;[All Fields] AND &quot;water&quot;[All Fields]) OR &quot;drinking water&quot;[All Fields])</QueryTranslation>
+</eSearchResult>
