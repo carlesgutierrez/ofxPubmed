@@ -10,8 +10,8 @@
 #define __httpRequestPubMed__ofxPubMed__
 
 #include <iostream>
-#include "ofURLFileLoader.h"
-#include "ofxXmlSettingsHttp.h"
+#include "ofMain.h"
+#include "ofxJSONElement.h"
 
 #define MAXITEMS 41
 
@@ -26,11 +26,16 @@ public:
 
     void keyPressed(int key);
     
+    void applyRequest();
+    
+    
     void starteSearchRequest(string item, string addtype);
-    void addSimpleTagRequest(string newitem, string addtype);
+    void addANDSimpleTagRequest(string newitem, string addtype);
+    void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
-    void applyRequest(string myPersonalRequest);
-    void urlResponse(ofHttpResponse & response);
+    
+    
+
 
 private:
 
@@ -50,13 +55,10 @@ private:
     string sSpaceCit;
     string sSpaceWords;
     string sAnd;
+    string sOr;
     string sTerm;
 
-    bool loading;
-
-    ofxXmlSettingsHttp xmlFromHttp;
-
-
+    ofxJSONElement myData;
 };
 
 #endif /* defined(__httpRequestPubMed__ofxPubMed__) */
