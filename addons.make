@@ -1,2 +1,4 @@
 ofxXmlSettings
 ofxJSON
+ofxUI
+ofxFTGL

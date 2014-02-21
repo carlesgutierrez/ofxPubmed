@@ -22,6 +22,4 @@ public:
     void gotMessage(ofMessage msg);
     
     ofxPubMed myPubMed;
-
-    
 };

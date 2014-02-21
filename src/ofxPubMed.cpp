@@ -14,6 +14,8 @@ void ofxPubMed::setup(){
     sBaseRequest = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
     sDatabase = "db=pubmed";
     sBasicSearching = "esearch.fcgi?";
+  
+    //search ID with Tags
     sBasicCitation = "ecitmatch.cgi?db=pubmed&rettype=xml&bdata=";
     sSpaceCit =  "%0D";
     sSpaceWords = "|";
@@ -21,8 +23,24 @@ void ofxPubMed::setup(){
     sOr = "+OR+";
     sTerm = "&term=";
     
+    //search Document with Id
+    sDocFetch = "efetch.fcgi?";
+    sId = "&id=";
+    
+    //Load all my Tags in Vectors
+    myVisibleSelItems.assign(myVisibleSelItemsArray, myVisibleSelItemsArray+MAXITEMS);
+    myVisibleDatasSelItems.assign(myVisibleDatasSelItemsArray, myVisibleDatasSelItemsArray+MAXITEMSDATAS);
+    //Used in request ( no spaces admited )
+    myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
+    myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
+    
     //json
     myData.clear();
+    
+    //setup Search Bar GUi
+    setupPubMedGUI();
+    setupPubMedGuiDatas();
+    
 }
 
 
@@ -125,4 +143,85 @@ void ofxPubMed::addORSimpleTagRequest(string newitem, string addtype){
 void ofxPubMed::addConsecutiveTagRequest(string newitem, string addtype){
     request += sAnd + newitem + addtype;
     cout << "Add consecutive TAG, now request is= " << request << endl;
+}
+
+//--------------------------------------------------------------
+void ofxPubMed::setupPubMedGUI(){
+   
+    float dim = 16;
+	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
+    float length = 255-xInit;
+    int width = 200;
+    
+    //pmGuiItems.setFont("fonts/Arial Unicode.ttf");
+    
+   
+    pmGuiItems.addWidgetDown(new ofxUILabel("DROP DOWN", OFX_UI_FONT_SMALL));
+    for(int i = 0; i<myVisibleSelItems.size(); i++) cout << "myVisibleSelItems[i] = " << myVisibleSelItems[i] << endl;
+    pmGuiItems.addDropDownList("SEARCH OPTIONS", myVisibleSelItems, width);
+    
+    pmGuiItems.setFontSize(OFX_UI_FONT_MEDIUM, 12);
+    pmGuiItems.addTextInput("SELECT OPTION", "Input Text", length-xInit);
+    //pmGuiItems.addTextInput("TEXT INPUT", "Input Text", length-xInit)->setAutoClear(false);
+    
+    ofAddListener(pmGuiItems.newGUIEvent,this,&ofxPubMed::guiEvent);
+}
+
+//--------------------------------------------------------------
+void ofxPubMed::setupPubMedGuiDatas(){
+    //TODO PETANDO a la minima insercion....
+    
+    int width = 200;
+    float dim = 16;
+	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING*2 + width;
+    float length = 255-xInit;
+    
+    //pmGuiDatas.setFont("fonts/Arial Unicode.ttf");
+    //pmGuiDatas.addTextInput("DD/MM/YY", "Input Text Data", length-xInit)->setAutoClear(true);
+   // pmGuiDatas.addTextInput("DD MM YY", "Data Text", length-xInit);
+
+   // pmGuiDatas.addWidgetRight(new ofxUILabel("DROP DOWN DATA", OFX_UI_FONT_SMALL));
+    //for(int i = 0; i<myRequestSelItems(); i++) cout << "myRequestSelItems[i] = " << myRequestSelItems[i] << endl;
+    //pmGuiDatas.addDropDownList("SEARCH DATA OPTIONS", myRequestSelItems, width);
+    
+   // ofAddListener(pmGuiDatas.newGUIEvent,this,&ofxPubMed::guiEvent);
+}
+
+//--------------------------------------------------------------
+void ofxPubMed::guiEvent(ofxUIEventArgs &e)
+{
+	string name = e.widget->getName();
+	int kind = e.widget->getKind();
+	cout << "got event from: " << name << endl;
+	
+	if(name == "SEARCH OPTIONS")
+	{
+		ofxUILabel *elabel = (ofxUILabel *) e.widget;
+		//TEST
+        //cout << "ITEM SELECTED: " << elabel->getLabel() << endl;
+	
+	}
+    else if(name == "TEXT INPUT")
+    {
+        ofxUITextInput *textinput = (ofxUITextInput *) e.widget;
+        if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
+        {
+            cout << "ON ENTER: ";
+            //            ofUnregisterKeyEvents((testApp*)this);
+        }
+        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
+        {
+            cout << "ON FOCUS: ";
+        }
+        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cout << "ON BLUR: ";
+            //            ofRegisterKeyEvents(this);
+        }
+        string output = textinput->getTextString();
+        cout << output << endl;
+    }
+	
+	
+	
 }

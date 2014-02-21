@@ -12,8 +12,10 @@
 #include <iostream>
 #include "ofMain.h"
 #include "ofxJSONElement.h"
+#include "ofxUI.h"
 
-#define MAXITEMS 41
+#define MAXITEMS 35
+#define MAXITEMSDATAS 6
 
 class ofxPubMed {
     
@@ -28,21 +30,32 @@ public:
     
     void applyRequest();
     
-    
+    //Search ID Functions
     void starteSearchRequest(string item, string addtype);
     void addANDSimpleTagRequest(string newitem, string addtype);
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
     
-    
-
+    //GUI
+    void setupPubMedGUI();
+    void setupPubMedGuiDatas();
+    void guiEvent(ofxUIEventArgs &e);
 
 private:
 
-    string myVisibleSelItems[MAXITEMS] = {"[Alliation]","[All Fields]", "[Author]", "[Author-Corporate]", "[Author-First]", "[Author - Full]", "[Author - Identifier]", "[Author - Last]", "[Book]", "[Date - Completion]", "[Date - Create]", "[Date - Entrez]","[Date - MeSH]", "[Date - Modification]", "[Date - Publication]", "[EC/RN Number]", "[Editor]", "[Filter]", "[Grant Number]", "[ISBN]", "[Investigator]", "[Investigator - Full]", "[Issue]", "[Journal]", "[Language]", "[Location ID]", "[MeSH Major Topic]", "[MeSH Subheading]", "[MeSH Subheading]", "[Other Term]", "[Pagination]", "[Pharmacological Action]", "[Publication Type]", "[Publisher]", "[Secondary Source ID]", "[Supplementary Concept]", "[Text Word]", "[Title]", "[Title/Abstract]", "[Transliterated Title]", "[Volume]"};
+    //USED IN APP
+    string myVisibleSelItemsArray[MAXITEMS] = {"[Alliation]","[All Fields]", "[Author]", "[Author-Corporate]", "[Author-First]", "[Author - Full]", "[Author - Identifier]", "[Author - Last]", "[Book]", "[EC/RN Number]", "[Editor]", "[Filter]", "[Grant Number]", "[ISBN]", "[Investigator]", "[Investigator - Full]", "[Issue]", "[Journal]", "[Language]", "[Location ID]", "[MeSH Major Topic]", "[MeSH Subheading]", "[MeSH Subheading]", "[Other Term]", "[Pagination]", "[Pharmacological Action]", "[Publication Type]", "[Publisher]", "[Secondary Source ID]", "[Supplementary Concept]", "[Text Word]", "[Title]", "[Title/Abstract]", "[Transliterated Title]", "[Volume]"};
+    vector<string> myVisibleSelItems;
+    
+    string myVisibleDatasSelItemsArray[MAXITEMSDATAS] = {"[Date - Completion]", "[Date - Create]", "[Date - Entrez]","[Date - MeSH]", "[Date - Modification]", "[Date - Publication]"};
+    vector<string> myVisibleDatasSelItems;
 
-
-    string myRequestSelItems[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[Date%20-%20Completion]", "[Date%20-%20Create]", "[Date%20-%20Entrez]","[Date%20-%20MeSH]", "[Date%20-%20Modification]", "[Date%20-%20Publication]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading]", "[MeSH%20Subheading]", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    //USED IN REQUEST
+    string myRequestSelItemsArray[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading]", "[MeSH%20Subheading]", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    vector<string> myRequestSelItems;
+    
+    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[Date%20-%20Completion]", "[Date%20-%20Create]", "[Date%20-%20Entrez]","[Date%20-%20MeSH]", "[Date%20-%20Modification]", "[Date%20-%20Publication]",};
+    vector<string> myRequestDataSelItems;
 
     //String for requests
 
@@ -57,8 +70,14 @@ private:
     string sAnd;
     string sOr;
     string sTerm;
+    
+    string sDocFetch;
+    string sId;
 
     ofxJSONElement myData;
+    ofxUICanvas pmGuiItems;
+    ofxUICanvas pmGuiDatas;
+
 };
 
 #endif /* defined(__httpRequestPubMed__ofxPubMed__) */
@@ -233,61 +252,6 @@ private:
  */
 
 ////////////////////////////////////////////////////////////////
-/*
- OUTPUT
- 
- Sample ESearch Output
- 
- <?xml version="1.0" ?>
- <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD eSearchResult, 11 May 2002//EN"
- "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eSearch_020511.dtd">
- <eSearchResult>
- <Count>255147</Count>   # total number of records matching query
- <RetMax>20</RetMax># number of UIDs returned in this XML; default=20
- <RetStart>0</RetStart># index of first record returned; default=0
- <QueryKey>1</QueryKey># QueryKey, only present if &usehistory=y
- <WebEnv>0l93yIkBjmM60UBXuvBvPfBIq8-9nIsldXuMP0hhuMH-
- 8GjCz7F_Dz1XL6z@397033B29A81FB01_0038SID</WebEnv>
- # WebEnv; only present if &usehistory=y
- <IdList>
- <Id>229486465</Id>    # list of UIDs returned
- <Id>229486321</Id>
- <Id>229485738</Id>
- <Id>229470359</Id>
- <Id>229463047</Id>
- <Id>229463037</Id>
- <Id>229463022</Id>
- <Id>229463019</Id>
- <Id>229463007</Id>
- <Id>229463002</Id>
- <Id>229463000</Id>
- <Id>229462974</Id>
- <Id>229462961</Id>
- <Id>229462956</Id>
- <Id>229462921</Id>
- <Id>229462905</Id>
- <Id>229462899</Id>
- <Id>229462873</Id>
- <Id>229462863</Id>
- <Id>229462862</Id>
- </IdList>
- <TranslationSet>        # details of how Entrez translated the query
- <Translation>
- <From>mouse[orgn]</From>
- <To>"Mus musculus"[Organism]</To>
- </Translation>
- </TranslationSet>
- <TranslationStack>
- <TermSet>
- <Term>"Mus musculus"[Organism]</Term>
- <Field>Organism</Field>
- <Count>255147</Count>
- <Explode>Y</Explode>
- </TermSet>
- <OP>GROUP</OP>
- </TranslationStack>
- <QueryTranslation>"Mus musculus"[Organism]</QueryTranslation>
- </eSearchResult>
- */
+//JSON OUTPUT
 
 ////////////////////////////////////////////////////////////////
