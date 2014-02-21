@@ -21,6 +21,9 @@ class ofxPubMed {
     
 public:
     
+    ofxPubMed();
+    ~ofxPubMed();
+    
     void setup();
     void update();
     void draw();
@@ -29,12 +32,14 @@ public:
     void keyPressed(int key);
     
     void applyRequest();
+    void applyDataRequest();
     
     //Search ID Functions
     void starteSearchRequest(string item, string addtype);
     void addANDSimpleTagRequest(string newitem, string addtype);
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
+    void addDataTagRequest(string fromdata, string todata, string type);
     
     //GUI
     void setupPubMedGUI();
@@ -70,13 +75,14 @@ private:
     string sAnd;
     string sOr;
     string sTerm;
-    
+    string sSlash;
+    string sQuotes;
     string sDocFetch;
     string sId;
 
     ofxJSONElement myData;
-    ofxUICanvas pmGuiItems;
-    ofxUICanvas pmGuiDatas;
+    ofxUICanvas* pmGuiItems1;
+    ofxUICanvas* pmGuiItems2;
 
 };
 
