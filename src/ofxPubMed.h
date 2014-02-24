@@ -34,12 +34,14 @@ public:
     
     void applyRequest();
     
+    
     //Search ID Functions
     void starteSearchRequest(string item, string addtype);
     void addANDSimpleTagRequest(string newitem, string addtype);
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
     void addDataTagRequest(string fromdata, string todata, string type);
+    string setformatForSearch(string text);
     
     //GUI
     void setupPubMedGUI();
@@ -80,11 +82,17 @@ private:
     string sSpaceWords;
     string sAnd;
     string sOr;
+    string sNot;
+    
     string sTerm;
     string sSlash;
     string sQuotes;
+    
     string sDocFetch;
     string sId;
+    
+    string sMindate;
+    string sMaxdate;
     
     bool bHitRequest;
     bool parsingSuccessful;

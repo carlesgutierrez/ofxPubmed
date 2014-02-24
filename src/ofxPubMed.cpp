@@ -33,7 +33,12 @@ ofxPubMed::ofxPubMed(){
     sSpaceWords = "|";
     sAnd = "+AND+";
     sOr = "+OR+";
+    sNot = "+NOT+";
     sTerm = "&term=";
+    
+    //date Commmands
+    sMindate = "&mindate=";
+    sMaxdate = "&maxdate=";
     
     //search Document with Id
     sDocFetch = "efetch.fcgi?";
@@ -74,7 +79,7 @@ void ofxPubMed::draw(){
     int y = 40;
     int bottomText = ofGetHeight()-100;
     int bottomRequest = ofGetHeight()-50;
-    int rightArea = ofGetWidth()-400;
+    int rightArea = ofGetWidth()-700;
     
  
     ofSetColor(0, 0, 0);
@@ -103,6 +108,27 @@ void ofxPubMed::draw(){
         ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
     }
     
+    //Draw Warnings
+    
+    vector <string> warnings  = myData["esearchresult"]["warninglist"].getMemberNames();
+    for(int i=0; i< warnings.size(); i++)
+	{
+        ofDrawBitmapString(warnings[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+        for (int j=0; j< myData["esearchresult"]["warninglist"]["outputmessages"].size();j++) {
+            ofDrawBitmapString(myData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+200, (i+1)*TEXTLINEHEIGHT+y+(j)*TEXTLINEHEIGHT);
+        }
+    }
+    
+    /*
+    "warninglist" : {
+        "outputmessages" : [
+                            "Range operator ':' not supported in field [All Fields]. Search terms that include a colon must be enclosed in double quotes.",
+                            "No items found."
+                            ],
+        "phrasesignored" : [],
+        "quotedphrasesnotfound" : []
+    }*/
+    
     if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
 
 }
@@ -125,19 +151,20 @@ void ofxPubMed::keyPressed(int key){
     //Progressive Request
     // Hit 4 then 5 .. and finallt apply with RETURN
     else if(key == '4'){
-        starteSearchRequest("strech", "[All%20Fields]");
+        //starteSearchRequest("aspirin hart attack prevention", "[All%20Fields]");
+        starteSearchRequest("aspirin", "[All%20Fields]");
     }
     else if(key == '5'){
-        addANDSimpleTagRequest("high%20performance", "[All%20Fields]");
+        addANDSimpleTagRequest("exercise sports", "[All%20Fields]");
     }
     else if(key == '6'){
-        addORSimpleTagRequest("high%20performance", "[All%20Fields]");
+        addORSimpleTagRequest("high performance", "[All%20Fields]");
     }
     else if(key == '7'){
         addDataTagRequest("1991/10/20","present", "[pDate]");
     }
     else if(key == '8'){
-        addDataTagRequest("1991/10/20","2014/02/21", "[pDate]");
+        addDataTagRequest("1991","2014", "[All%20Fields]");
     }
     
     //General Request is under construction
@@ -149,7 +176,9 @@ void ofxPubMed::keyPressed(int key){
         applyRequest();
         bHitRequest = true;
     }
-    
+
+    //Reset actual request
+    if(key == 127)request="";
 }
 
 
@@ -179,13 +208,18 @@ void ofxPubMed::exit() {
 	delete pmGuiItems2;
 }
 
+//--------------------------------------------------------------
+string ofxPubMed::setformatForSearch(string text){
+    std::replace( text.begin(), text.end(), ' ', '|');
+    return text;
+}
 
 //--------------------------------------------------------------
 void ofxPubMed::starteSearchRequest(string item, string addtype){
     
     request.clear();
     request = sBaseRequest + sBasicSearching + sDatabase +
-    sTerm + item + addtype;
+    sTerm + setformatForSearch(item) + addtype;
     
     //example
     //http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=climb[All Fields] AND strech[All Fields]
@@ -193,19 +227,21 @@ void ofxPubMed::starteSearchRequest(string item, string addtype){
 
 //--------------------------------------------------------------
 void ofxPubMed::addANDSimpleTagRequest(string newitem, string addtype){
-    request += sAnd + newitem + addtype;
+    request += sAnd + setformatForSearch(newitem) + addtype;
     cout << "Add AND simple TAG, now request is= " << request << endl;
 }
 
 //--------------------------------------------------------------
 void ofxPubMed::addORSimpleTagRequest(string newitem, string addtype){
-    request += sOr + newitem + addtype;
+    request += sOr + setformatForSearch(newitem) + addtype;
     cout << "Add OR simple TAG, now request is= " << request << endl;
 }
 
 //--------------------------------------------------------------
 void ofxPubMed::addDataTagRequest(string from_data, string to_data, string addtype){
-    request += sQuotes + from_data + sQuotes + addtype + sQuotes+  to_data + sQuotes + addtype;
+    //request += sQuotes + from_data + sQuotes + addtype + sQuotes+  to_data + sQuotes + addtype;
+    request += sMindate + from_data + addtype + sMaxdate + to_data + addtype;
+    
     cout << "Data TAG, now request is= " << request << endl;
 }
 
@@ -231,7 +267,7 @@ void ofxPubMed::setupPubMedGUI(){
     pmGuiItems1->addDropDownList("Select data option", myVisibleDatasSelItems, width);
     
     // TODO BAD ACCESS al Text Input!!
-    pmGuiItems1->addTextInput("pmGui Text", "Search Text", width);
+    //pmGuiItems1->addTextInput("pmGui Text", "Search Text", width);
     
     pmGuiItems1->addToggle("Data Mode", false, 20, 20);
     pmGuiItems1->addToggle("Item Mode", false, 20, 20);

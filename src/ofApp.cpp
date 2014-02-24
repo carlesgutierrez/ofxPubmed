@@ -29,8 +29,6 @@ void ofApp::keyPressed(int key){
     myPubMed.keyPressed(key);
 }
 
-
-
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
     
