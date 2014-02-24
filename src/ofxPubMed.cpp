@@ -18,6 +18,12 @@ ofxPubMed::ofxPubMed(){
     //search ID with Tags
     sBasicCitation = "ecitmatch.cgi?db=pubmed&rettype=xml&bdata=";
     
+    //Search vars
+    sRelDate = "&reldate=";     //60
+    sDateType = "&datetype=";   //edat
+    sRetMax = "&datetype=";     //100
+    sUseHist = "&usehistory=";  //y
+    
     //Html commands
     sSpaceCit =  "%0D";
     sSlash = "%2F";
@@ -32,13 +38,19 @@ ofxPubMed::ofxPubMed(){
     //search Document with Id
     sDocFetch = "efetch.fcgi?";
     sId = "&id=";
+
     
     //Load all my Tags in Vectors
     myVisibleSelItems.assign(myVisibleSelItemsArray, myVisibleSelItemsArray+MAXITEMS);
     myVisibleDatasSelItems.assign(myVisibleDatasSelItemsArray, myVisibleDatasSelItemsArray+MAXITEMSDATAS);
-    //Used in request ( no spaces admited )
+    //The same tags but with not spaces admited for html requests
     myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
     myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
+    
+    //Main control variables
+    request = "empty";
+    parsingSuccessful = false;
+    bHitRequest = false;
     
     //json
     myData.clear();
@@ -49,39 +61,59 @@ ofxPubMed::~ofxPubMed(){
 
 //--------------------------------------------------------------
 void ofxPubMed::setup(){
-    
- 
-    
     //setup Search Bar GUi
     setupPubMedGUI();
-    setupPubMedGuiDatas();
-    
+    //setupPubMedGuiDatas();
 }
 
 
 //--------------------------------------------------------------
 void ofxPubMed::draw(){
+    
+    int x = 20;
+    int y = 40;
+    int bottomText = ofGetHeight()-100;
+    int bottomRequest = ofGetHeight()-50;
+    int rightArea = ofGetWidth()-400;
+    
  
     ofSetColor(0, 0, 0);
-    ofDrawBitmapString("hit spacebar to load requested info", 10, ofGetHeight()-100);
+    ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
+    ofDrawBitmapString("The actual request is = ", x, bottomRequest-TEXTLINEHEIGHT);
+    ofDrawBitmapString(request, x, bottomRequest);
     
-    //json
-    for(int i=0; i< myData["esearchresult"].size(); i++)
+    //Results json
+    int textwidth = 130;
+    ofDrawBitmapString("[PMID] results:", rightArea - textwidth, y);
+
+    //Draw results
+    if(myData["esearchresult"]["idlist"].size()<1)
+    ofDrawBitmapString("No results", rightArea, y);
+    
+    for(int i=0; i< myData["esearchresult"]["idlist"].size(); i++)
 	{
 		std::string text  = myData["esearchresult"]["idlist"][i].asString();
-		ofDrawBitmapString(text, 20, i*24+40);
+		ofDrawBitmapString(text, rightArea, i*TEXTLINEHEIGHT+y);
 	}
+    
+    //Draw errors
+    vector <string> errors  = myData["esearchresult"]["errorlist"].getMemberNames();
+    for(int i=0; i< errors.size(); i++)
+	{
+        ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+    }
+    
+    if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
 
 }
 
 //--------------------------------------------------------------
 void ofxPubMed::keyPressed(int key){
+
     
-   //After call this
-    
-    //Hardcode Request
+    //Direct Request for Test and apply with RETURN
     if(key == '1'){
-        request = "http://www.ncbi.nlm.nih.gov/pubmed?term=(\"1991/02/21\"[Date - Completion] : \"3000[Date - Completion])\"";
+        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&datetype=edat&mindate=2011&maxdate=2012";
     }
     else if(key == '2'){
         request = "http://www.ncbi.nlm.nih.gov/pubmed?term=%28%221991%2F02%2F21%22[Date%20-%20Completion]%20%3A%20%223000%22[Date%20-%20Completion]%29";
@@ -90,7 +122,8 @@ void ofxPubMed::keyPressed(int key){
         request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%23hand[All%20Fields]+AND+sports[All%20Fields]+AND+water[All Fields]";
     }
     
-    //Progressive request, First 4, then 5, then RETURN
+    //Progressive Request
+    // Hit 4 then 5 .. and finallt apply with RETURN
     else if(key == '4'){
         starteSearchRequest("strech", "[All%20Fields]");
     }
@@ -100,19 +133,21 @@ void ofxPubMed::keyPressed(int key){
     else if(key == '6'){
         addORSimpleTagRequest("high%20performance", "[All%20Fields]");
     }
-    else if(key == '6'){
-        addDataTagRequest("1991/10/20","present", "[Date - Publication]");
-    }
     else if(key == '7'){
-        addDataTagRequest("1991/10/20","2014/02/21", "[Date - Publication]");
+        addDataTagRequest("1991/10/20","present", "[pDate]");
+    }
+    else if(key == '8'){
+        addDataTagRequest("1991/10/20","2014/02/21", "[pDate]");
     }
     
-    //After this Ckeck: file.xml for results // todo : Draw result in the screen
-    else if(key == OF_KEY_RETURN){
+    //General Request is under construction
+    bHitRequest = false;
+    
+    //Apply request Type
+    //Add Json request
+    if(key == OF_KEY_RETURN){
         applyRequest();
-    }
-    else if(key == OF_KEY_DEL){
-        applyDataRequest();
+        bHitRequest = true;
     }
     
 }
@@ -121,31 +156,20 @@ void ofxPubMed::keyPressed(int key){
 //--------------------------------------------------------------
 void ofxPubMed::applyRequest() {
     
+    myData.clear();
+    
     // Now parse the JSON
-    bool parsingSuccessful = myData.open(request+"&retmode=json");
+    parsingSuccessful = myData.open(request+"&retmode=json");
     
     if (parsingSuccessful) {
         cout << myData.getRawString(true) << endl;
+        cout << "esearchresult size= " << myData["esearchresult"].size() << endl;
+
     }
     else {
         cout  << "Failed to parse JSON" << endl;
     }
         
-}
-
-//--------------------------------------------------------------
-void ofxPubMed::applyDataRequest() {
-    
-    // Now parse the JSON
-    bool parsingSuccessful = myData.open(request);
-    
-    if (parsingSuccessful) {
-        cout << myData.getRawString(true) << endl;
-    }
-    else {
-        cout  << "Failed to parse JSON" << endl;
-    }
-    
 }
 
 
@@ -205,7 +229,9 @@ void ofxPubMed::setupPubMedGUI(){
    
     pmGuiItems1->addDropDownList("Select item option", myVisibleSelItems, width);
     pmGuiItems1->addDropDownList("Select data option", myVisibleDatasSelItems, width);
-    //pmGuiItems->addTextInput("pmGui Text", "Search Text", width); // TODO no funciona el Text Input!
+    
+    // TODO BAD ACCESS al Text Input!!
+    pmGuiItems1->addTextInput("pmGui Text", "Search Text", width);
     
     pmGuiItems1->addToggle("Data Mode", false, 20, 20);
     pmGuiItems1->addToggle("Item Mode", false, 20, 20);
@@ -214,6 +240,7 @@ void ofxPubMed::setupPubMedGUI(){
     
     ofAddListener(pmGuiItems1->newGUIEvent,this,&ofxPubMed::guiEvent);
 }
+
 
 //--------------------------------------------------------------
 void ofxPubMed::setupPubMedGuiDatas(){
