@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "ofxJSONElement.h"
 #include "ofxUI.h"
+#include "guiPubMed.h"
 
 #define MAXITEMS 35
 #define MAXITEMSDATAS 6
@@ -28,7 +29,6 @@ public:
     void setup();
     void update();
     void draw();
-    void exit();
 
     void keyPressed(int key);
     
@@ -40,21 +40,9 @@ public:
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
     void addDataTagRequest(string fromdata, string todata, string type);
-    
-    //GUI
-    void setupPubMedGUI();
-    void setupPubMedGuiDatas();
-    void guiEvent(ofxUIEventArgs &e);
 
 private:
-
-    //USED IN APP
-    string myVisibleSelItemsArray[MAXITEMS] = {"[Alliation]","[All Fields]", "[Author]", "[Author-Corporate]", "[Author-First]", "[Author - Full]", "[Author - Identifier]", "[Author - Last]", "[Book]", "[EC/RN Number]", "[Editor]", "[Filter]", "[Grant Number]", "[ISBN]", "[Investigator]", "[Investigator - Full]", "[Issue]", "[Journal]", "[Language]", "[Location ID]", "[MeSH Major Topic]", "[MeSH Subheading]", "[MeSH Subheading]", "[Other Term]", "[Pagination]", "[Pharmacological Action]", "[Publication Type]", "[Publisher]", "[Secondary Source ID]", "[Supplementary Concept]", "[Text Word]", "[Title]", "[Title/Abstract]", "[Transliterated Title]", "[Volume]"};
-    vector<string> myVisibleSelItems;
-    
-    string myVisibleDatasSelItemsArray[MAXITEMSDATAS] = {"[Date - Completion]", "[Date - Create]", "[Date - Entrez]","[Date - MeSH]", "[Date - Modification]", "[Date - Publication]"};
-    vector<string> myVisibleDatasSelItems;
-
+	
     //USED IN REQUEST
     string myRequestSelItemsArray[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading]", "[MeSH%20Subheading]", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
     vector<string> myRequestSelItems;
@@ -90,12 +78,7 @@ private:
     bool parsingSuccessful;
 
     ofxJSONElement myData;
-   
-    
-    //GUIS
-    //Jordi tot lo que vulguis afegir a partir de aqui
-    ofxUICanvas* pmGuiItems1;
-    ofxUICanvas* pmGuiItems2;
+
 
 };
 
