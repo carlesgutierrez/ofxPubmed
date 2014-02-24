@@ -25,6 +25,7 @@ void ofApp::exit() {
 void ofApp::keyPressed(int key){
     
     myPubMed.keyPressed(key);
+	myGuiPubMed.keyPressed(key);
 }
 
 

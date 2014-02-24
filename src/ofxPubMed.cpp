@@ -162,8 +162,7 @@ void ofxPubMed::applyRequest() {
     }
     else {
         cout  << "Failed to parse JSON" << endl;
-    }
-        
+    }        
 }
 
 
