@@ -6,8 +6,9 @@
 #include "ofxPubMed.h"
 
 
-#define MAXITEMS 35
+#define MAXITEMS 34
 #define MAXITEMSDATAS 6
+#define MAXadd 4
 
 class guiPubMed {
 
@@ -20,23 +21,31 @@ public:
 	void update();
 	void draw();
 	void exit();
+	void keyPressed(int key);
+	
 	
 private:
 	
 	//USED IN APP
-    string myVisibleSelItemsArray[MAXITEMS] = {"[Alliation]","[All Fields]", "[Author]", "[Author-Corporate]", "[Author-First]", "[Author - Full]", "[Author - Identifier]", "[Author - Last]", "[Book]", "[EC/RN Number]", "[Editor]", "[Filter]", "[Grant Number]", "[ISBN]", "[Investigator]", "[Investigator - Full]", "[Issue]", "[Journal]", "[Language]", "[Location ID]", "[MeSH Major Topic]", "[MeSH Subheading]", "[MeSH Subheading]", "[Other Term]", "[Pagination]", "[Pharmacological Action]", "[Publication Type]", "[Publisher]", "[Secondary Source ID]", "[Supplementary Concept]", "[Text Word]", "[Title]", "[Title/Abstract]", "[Transliterated Title]", "[Volume]"};
+    string myVisibleSelItemsArray [MAXITEMS] = {"Alliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
     vector<string> myVisibleSelItems;
     
-    string myVisibleDatasSelItemsArray[MAXITEMSDATAS] = {"[Date - Completion]", "[Date - Create]", "[Date - Entrez]","[Date - MeSH]", "[Date - Modification]", "[Date - Publication]"};
+    string myVisibleDatasSelItemsArray [MAXITEMSDATAS] = {"Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication"};
     vector<string> myVisibleDatasSelItems;
 
+	string andOrNotArray [MAXadd] = {"And", "Or", "Not", "-"};
+    vector<string> andOrNot;
+	
     //GUIS
     void setupPubMedGUI();
-    void setupPubMedGuiDatas();
+    void addSearchField();
+	void setupPubMedGuiDatas();
+	void removeSearchField();
     void guiEvent(ofxUIEventArgs &e);
-    ofxUICanvas *pmGuiItems1;
-    ofxUICanvas *pmGuiItems2;
+    ofxUICanvas *gui;
 
+	int searchFields;
+	int searchFieldsH;
 	
 	// tabCanvas
 	float tabCanvasX;
@@ -52,18 +61,18 @@ private:
 	float postCanvasW;
 	float postCanvasH;
 	float postFieldH;
-	
-	// tweetsCanvas
-	float tweetsCanvasX;
-	float tweetsCanvasY;
-	float tweetsCanvasW;
-	float tweetsCanvasH;
-	
+		
 	// searchCanvas
 	float searchCanvasX;
 	float searchCanvasY;
 	float searchCanvasW;
 	float searchCanvasH;
+	
+	// postCanvas
+	float dropDownX;
+	float dropDownY;
+	float dropDownW;
+	float dropDownH;
 	
 	// search field
 	float textInputY;
@@ -71,6 +80,12 @@ private:
 	float searchFieldY;
 	float searchFieldW;
 	float searchFieldH;
+	
+	float addButtonX;
+	float addButtonY;
+	float addButtonW;
+	float addButtonH;
+	
 	
 	bool bsnap;
 	float space;
