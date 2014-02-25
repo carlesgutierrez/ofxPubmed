@@ -27,6 +27,7 @@ public:
 private:
     
     bool letsAddNewSearchField;
+	bool bRemoveSearchField;
 	
 	//USED IN APP
     string myVisibleSelItemsArray [MAXITEMS] = {"Alliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};

@@ -73,6 +73,11 @@ void guiPubMed::update(){
         addSearchField();
         letsAddNewSearchField = false;
     }
+	
+	if(bRemoveSearchField){
+        removeSearchField();
+        bRemoveSearchField = false;
+    }
 }
 //--------------------------------------------------------------
 void guiPubMed::setupPubMedGUI(){
@@ -238,15 +243,18 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 //					add->setLabelText("-");
 				}else if(current[0] == 1){
 					cout << "or" << endl;
+					letsAddNewSearchField = true;
 //					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 2){
 					cout << "not" << endl;
+					letsAddNewSearchField = true;
 //					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 3){
 					cout << "-" << endl;
-//					removeSearchField();
+					bRemoveSearchField = true;
+					removeSearchField();
 //					add->setLabelText("+");
 				}
 			}
