@@ -36,11 +36,13 @@ void guiPubMed::setup(){
 	tabCanvasH		= 600;
 	toggleW			= 100;
 	toggleH			= lineHeight;
+    newbuttonW      = 10;
+    newbuttonH      = 10;
 	
 	// Search field Canvas
 	searchCanvasX	= tabCanvasX;
 	searchCanvasY	= tabCanvasY;
-	searchCanvasW	= tabCanvasW;
+	searchCanvasW	= tabCanvasW + newbuttonW*4 ;
 	searchCanvasH	= tabCanvasH;
 
 	// Dropdown list
@@ -64,7 +66,14 @@ void guiPubMed::setup(){
 	addSearchField();
 
 }
-
+//--------------------------------------------------------------
+void guiPubMed::update(){
+    
+    if(letsAddNewSearchField){
+        addSearchField();
+        letsAddNewSearchField = false;
+    }
+}
 //--------------------------------------------------------------
 void guiPubMed::setupPubMedGUI(){
 //	gui->setFont("fonts/Arial Unicode.ttf");
@@ -142,6 +151,9 @@ void guiPubMed::addSearchField(){
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
+    
+    gui->addButton("New", false, newbuttonW, newbuttonH);
+    
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 
 	gui->addSpacer(50);
@@ -167,7 +179,13 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 
 	string name = e.widget->getName();
 	int kind = e.widget->getKind();
-	cout << "got event from: " << name << endl;
+	cout << "got event from: " << name << " kind: " << kind << endl;
+
+    //Add a new search Bar
+    if(name == "New" && e.widget->getState()== OFX_UI_STATE_OVER ){
+        letsAddNewSearchField = true;
+    }
+    
 
 	// check which searchfield has been pressed
 	for (int i = 0 ; i<=searchFields; i++) {
@@ -180,7 +198,6 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			//TEST
 			//cout << "ITEM SELECTED: " << elabel->getLabel() << endl;
 		}
-		
 		//---------------------------------------------
 		else if(name == "textField"+ofToString(i))
 		{
@@ -201,7 +218,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			string output = t->getTextString();
 			cout << output << endl;
 		}
-		
+		/*
 		//---------------------------------------------
 		else if(name == "+"+ofToString(i))
 		{
@@ -233,6 +250,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 				}
 			}
 		}
+         */
+
 	}// end for
 	cout << ".." << endl;
 }
@@ -241,10 +260,12 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 //--------------------------------------------------------------
 void guiPubMed::keyPressed(int key){
 	
+   /*
     //Direct Request for Test and apply with RETURN
     if(key == 'l'){
 		cout << "pressed l" << endl;
 		addSearchField();
     }
+    */
     
 }
