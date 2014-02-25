@@ -12,7 +12,7 @@
 #include <iostream>
 #include "ofMain.h"
 #include "ofxJSONElement.h"
-#include "ofxUI.h"
+//#include "ofxUI.h"
 #include "guiPubMed.h"
 
 #define MAXITEMS 35

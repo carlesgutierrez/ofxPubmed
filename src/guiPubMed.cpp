@@ -26,7 +26,7 @@ void guiPubMed::exit() {
 void guiPubMed::setup(){
 
 	int searchFields= 1;
-	searchFieldsH	= 100;
+//	searchFieldsH	= 100;
 	int lineHeight	= 35;
 	
 	// tabCanvas
@@ -105,14 +105,15 @@ void guiPubMed::setupPubMedGUI(){
 	add->setLabelText("And");
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 	
-//	gui->addSpacer();
-//	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+	gui->addSpacer(50);
+	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 	
     ofAddListener(gui->newGUIEvent,this,&guiPubMed::guiEvent);
 }
 //*searchFields*searchFieldH);
 //--------------------------------------------------------------
 void guiPubMed::addSearchField(){
+	
 	searchFields++;
 	int i = searchFields;
 	
@@ -142,9 +143,9 @@ void guiPubMed::addSearchField(){
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
-	
-//	gui->addSpacer();
-//	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+
+	gui->addSpacer(50);
+	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 }
 
 //--------------------------------------------------------------
@@ -168,9 +169,10 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	int kind = e.widget->getKind();
 	cout << "got event from: " << name << endl;
 
+	// check which searchfield has been pressed
 	for (int i = 0 ; i<=searchFields; i++) {
-
 		
+		//---------------------------------------------
 		if(name == "dropDown"+ofToString(i))
 		{
 			ofxUIDropDownList *dropDown = (ofxUIDropDownList *) e.widget;
@@ -179,7 +181,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			//cout << "ITEM SELECTED: " << elabel->getLabel() << endl;
 		}
 		
-		
+		//---------------------------------------------
 		else if(name == "textField"+ofToString(i))
 		{
 			ofxUITextInput *t = (ofxUITextInput *) e.widget;
@@ -200,40 +202,39 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			cout << output << endl;
 		}
 		
-		
+		//---------------------------------------------
 		else if(name == "+"+ofToString(i))
 		{
 			cout << "*******************************"<< endl;
 			ofxUIDropDownList *add = (ofxUIDropDownList *) e.widget;
 			
+			// get the current selection on the Add dropdown
 			vector <int> current =	add->getSelectedIndeces();
-			for (int i=0; i<current.size(); i++) {
-				cout << current[i]<< endl;
+			cout <<"current size"<< current.size()<< endl;
+			for (int j= 0; j<current.size(); j++) {
+				cout <<"current j"<< current[j]<< endl;
 				
 				if( current[0] == 0 ){
-					cout << "and" << endl;
+					cout << "add search field! " << endl;
 					addSearchField();
-	//				add->setLabelText("-");
+//					add->setLabelText("-");
 				}else if(current[0] == 1){
 					cout << "or" << endl;
 					addSearchField();
-	//				add->setLabelText("-");
+//					add->setLabelText("-");
 				}else if(current[0] == 2){
 					cout << "not" << endl;
 					addSearchField();
-	//				add->setLabelText("-");
+//					add->setLabelText("-");
 				}else if(current[0] == 3){
 					cout << "-" << endl;
-					removeSearchField();
-	//				add->setLabelText("+");
+//					removeSearchField();
+//					add->setLabelText("+");
 				}
-				
 			}
 		}
-	
-	
 	}// end for
-	
+	cout << ".." << endl;
 }
 
 
