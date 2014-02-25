@@ -216,6 +216,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 				
 				if( current[0] == 0 ){
 					cout << "add search field! " << endl;
+//					ofUnregisterMouseEvents((guiPubMed*)this);
 					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 1){
