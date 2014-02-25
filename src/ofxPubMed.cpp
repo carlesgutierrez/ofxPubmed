@@ -37,6 +37,7 @@ ofxPubMed::ofxPubMed(){
     sTerm = "&term=";
     
     //date Commmands
+    sdataType= "&datetype=";
     sMindate = "&mindate=";
     sMaxdate = "&maxdate=";
     
@@ -44,11 +45,7 @@ ofxPubMed::ofxPubMed(){
     sDocFetch = "efetch.fcgi?";
     sId = "&id=";
 
-    
-    //Load all my Tags in Vectors
-    myVisibleSelItems.assign(myVisibleSelItemsArray, myVisibleSelItemsArray+MAXITEMS);
-    myVisibleDatasSelItems.assign(myVisibleDatasSelItemsArray, myVisibleDatasSelItemsArray+MAXITEMSDATAS);
-    //The same tags but with not spaces admited for html requests
+	//The same tags but with not spaces admited for html requests
     myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
     myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
     
@@ -66,9 +63,7 @@ ofxPubMed::~ofxPubMed(){
 
 //--------------------------------------------------------------
 void ofxPubMed::setup(){
-    //setup Search Bar GUi
-    setupPubMedGUI();
-    //setupPubMedGuiDatas();
+
 }
 
 
@@ -79,7 +74,7 @@ void ofxPubMed::draw(){
     int y = 40;
     int bottomText = ofGetHeight()-100;
     int bottomRequest = ofGetHeight()-50;
-    int rightArea = ofGetWidth()-700;
+    int rightArea = ofGetWidth()-500;
     
  
     ofSetColor(0, 0, 0);
@@ -93,7 +88,7 @@ void ofxPubMed::draw(){
 
     //Draw results
     if(myData["esearchresult"]["idlist"].size()<1)
-    ofDrawBitmapString("No results", rightArea, y);
+    ofDrawBitmapString("No items founds", rightArea, y);
     
     for(int i=0; i< myData["esearchresult"]["idlist"].size(); i++)
 	{
@@ -105,29 +100,48 @@ void ofxPubMed::draw(){
     vector <string> errors  = myData["esearchresult"]["errorlist"].getMemberNames();
     for(int i=0; i< errors.size(); i++)
 	{
-        ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+        
+        if(i==0){
+            int numfieldsnotfound = myData["esearchresult"]["errorlist"]["fieldsnotfound"].size();
+            if(numfieldsnotfound)ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+        }
+        else{
+            int numphrasesnotfound = myData["esearchresult"]["errorlist"]["phrasesnotfound"].size();
+            if(numphrasesnotfound)ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+        }
+        
     }
     
     //Draw Warnings
-    
+    int accumPos = 0;
     vector <string> warnings  = myData["esearchresult"]["warninglist"].getMemberNames();
     for(int i=0; i< warnings.size(); i++)
 	{
-        ofDrawBitmapString(warnings[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
-        for (int j=0; j< myData["esearchresult"]["warninglist"]["outputmessages"].size();j++) {
-            ofDrawBitmapString(myData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+200, (i+1)*TEXTLINEHEIGHT+y+(j)*TEXTLINEHEIGHT);
+        int numwarnings = myData["esearchresult"]["warninglist"]["outputmessages"].size();
+        if(i==0)accumPos += y + TEXTLINEHEIGHT + (i)*TEXTLINEHEIGHT;
+        
+        if(i==0){ // outputmessages
+            int numOutputMessages = myData["esearchresult"]["warninglist"]["outputmessages"].size();
+            if(numOutputMessages)ofDrawBitmapString(warnings[i], rightArea, accumPos);
+            for (int j=0; j< numOutputMessages;j++) {
+                accumPos += (j)*TEXTLINEHEIGHT;
+                ofDrawBitmapString(myData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+200, accumPos);
+            }
         }
+        else if(i==1){ // phrasesignored
+            accumPos += TEXTLINEHEIGHT;
+            int numphrasesignored = myData["esearchresult"]["warninglist"]["phrasesignored"].size();
+            if(numphrasesignored>0)ofDrawBitmapString(warnings[i], rightArea, accumPos);
+            for (int j=0; j< numphrasesignored;j++) {
+                
+            }
+        }
+        else if(i==2){ // quotedphrasesnotfound
+            accumPos += TEXTLINEHEIGHT;
+            ofDrawBitmapString(warnings[i], rightArea, accumPos);
+        }
+        
     }
-    
-    /*
-    "warninglist" : {
-        "outputmessages" : [
-                            "Range operator ':' not supported in field [All Fields]. Search terms that include a colon must be enclosed in double quotes.",
-                            "No items found."
-                            ],
-        "phrasesignored" : [],
-        "quotedphrasesnotfound" : []
-    }*/
     
     if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
 
@@ -136,34 +150,40 @@ void ofxPubMed::draw(){
 //--------------------------------------------------------------
 void ofxPubMed::keyPressed(int key){
 
+    if (key == ' ') {
+        setBasiceSearchRequest();
+    }
     
     //Direct Request for Test and apply with RETURN
     if(key == '1'){
         request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&datetype=edat&mindate=2011&maxdate=2012";
     }
     else if(key == '2'){
-        request = "http://www.ncbi.nlm.nih.gov/pubmed?term=%28%221991%2F02%2F21%22[Date%20-%20Completion]%20%3A%20%223000%22[Date%20-%20Completion]%29";
+        request = "http://www.ncbi.nlm.nih.gov/pubmed&term=aspirine&mindate=1991/02/21[pDate]&maxdate=2013/02/21[pDate]";
     }
     else if(key == '3'){
-        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%23hand[All%20Fields]+AND+sports[All%20Fields]+AND+water[All Fields]";
+        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&reldate=60&datetype=edat&retmax=100&usehistory=y";
     }
     
     //Progressive Request
     // Hit 4 then 5 .. and finallt apply with RETURN
     else if(key == '4'){
-        //starteSearchRequest("aspirin hart attack prevention", "[All%20Fields]");
-        starteSearchRequest("aspirin", "[All%20Fields]");
+        starteSearchRequestWithItem("aspirin hart attack prevention", "[All%20Fields]");
     }
     else if(key == '5'){
-        addANDSimpleTagRequest("exercise sports", "[All%20Fields]");
+        addRelDateRequest(sRelDate, "60");
+        addDataTypeRequest("EDAT");
     }
     else if(key == '6'){
-        addORSimpleTagRequest("high performance", "[All%20Fields]");
+        addMinMaxDataSearchRequest("1991/02/12","[DA]","2013/12/30","[DCOM]");
     }
     else if(key == '7'){
-        addDataTagRequest("1991/10/20","present", "[pDate]");
+        addORSimpleTagRequest("high performance", "[All%20Fields]");
     }
     else if(key == '8'){
+        addDataTagRequest("1991/10/20","present", "[pDate]");
+    }
+    else if(key == '9'){
         addDataTagRequest("1991","2014", "[All%20Fields]");
     }
     
@@ -197,25 +217,26 @@ void ofxPubMed::applyRequest() {
     }
     else {
         cout  << "Failed to parse JSON" << endl;
-    }
-        
+    }        
 }
-
 
 //--------------------------------------------------------------
-void ofxPubMed::exit() {
-    delete pmGuiItems1;
-	delete pmGuiItems2;
+void ofxPubMed::setBasiceSearchRequest(){
+    request.clear();
+    request += sBaseRequest;
 }
-
 //--------------------------------------------------------------
 string ofxPubMed::setformatForSearch(string text){
     std::replace( text.begin(), text.end(), ' ', '|');
     return text;
 }
+//--------------------------------------------------------------
+void ofxPubMed::changeBasicSearchRequest(string basicSearch){
+    sBaseRequest = basicSearch;
+}
 
 //--------------------------------------------------------------
-void ofxPubMed::starteSearchRequest(string item, string addtype){
+void ofxPubMed::starteSearchRequestWithItem(string item, string addtype){
     
     request.clear();
     request = sBaseRequest + sBasicSearching + sDatabase +
@@ -252,91 +273,16 @@ void ofxPubMed::addConsecutiveTagRequest(string newitem, string addtype){
 }
 
 //--------------------------------------------------------------
-void ofxPubMed::setupPubMedGUI(){
-   
-	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    int width = 200;
-    int height = 200;
-    //pmGuiItems.setFont("fonts/Arial Unicode.ttf");
-   
-    pmGuiItems1 = new ofxUICanvas(xInit, 0, width, height);
-
-    for(int i = 0; i<myVisibleSelItems.size(); i++) cout << "myVisibleSelItems[i] = " << myVisibleSelItems[i] << endl;
-   
-    pmGuiItems1->addDropDownList("Select item option", myVisibleSelItems, width);
-    pmGuiItems1->addDropDownList("Select data option", myVisibleDatasSelItems, width);
-    
-    // TODO BAD ACCESS al Text Input!!
-    //pmGuiItems1->addTextInput("pmGui Text", "Search Text", width);
-    
-    pmGuiItems1->addToggle("Data Mode", false, 20, 20);
-    pmGuiItems1->addToggle("Item Mode", false, 20, 20);
-    
-    pmGuiItems1->addToggle("Add new search", false, 20, 20); // if ad d is true, then set visible.
-    
-    ofAddListener(pmGuiItems1->newGUIEvent,this,&ofxPubMed::guiEvent);
+void ofxPubMed::addDataTypeRequest(string datatype){
+    request += sdataType + datatype;
 }
-
-
+                                   
 //--------------------------------------------------------------
-void ofxPubMed::setupPubMedGuiDatas(){
-    //TODO PETANDO a la minima insercion....
-    int width = 200;
-    int height = 200;
-	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING*2 + width;
-
-    pmGuiItems2 = new ofxUICanvas( xInit, 0, width, height);
-    
-    pmGuiItems2->addDropDownList("Select item option", myVisibleSelItems, width);
-    pmGuiItems2->addDropDownList("Select data option", myVisibleDatasSelItems, width);
-    //pmGuiItems->addTextInput("pmGui Text", "Search Text", width); // TODO no funciona el Text Input!
-    
-    pmGuiItems2->addToggle("Data Mode", false, 20, 20);
-    pmGuiItems2->addToggle("Item Mode", false, 20, 20);
-    
-    pmGuiItems2->addToggle("Add new search", false, 20, 20);
+void ofxPubMed::addRelDateRequest(string reldate, string days){
+   request += reldate + days;
 }
 
 //--------------------------------------------------------------
-void ofxPubMed::guiEvent(ofxUIEventArgs &e)
-{
-	string name = e.widget->getName();
-	int kind = e.widget->getKind();
-	cout << "got event from: " << name << endl;
-	
-	if(name == "Select item option")
-	{
-		ofxUILabel *elabel = (ofxUILabel *) e.widget;
-		//TEST
-        //cout << "ITEM SELECTED: " << elabel->getLabel() << endl;
-	
-	}
-    else if(name == "pmGui Text")
-    {
-        ofxUITextInput *textinput = (ofxUITextInput *) e.widget;
-        if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
-        {
-            cout << "ON ENTER: ";
-            //            ofUnregisterKeyEvents((testApp*)this);
-        }
-        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
-        {
-            cout << "ON FOCUS: ";
-        }
-        else if(textinput->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
-        {
-            cout << "ON BLUR: ";
-            //            ofRegisterKeyEvents(this);
-        }
-        string output = textinput->getTextString();
-        cout << output << endl;
-    }
-    else if(name == "B1")
-	{
-        ofxUIButton *button = (ofxUIButton *) e.widget;
-        cout << "value: " << button->getValue() << endl;
-	}
-	
-	
-	
+void ofxPubMed::addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax){
+    request += datemin + typedatemin + datemax + typedatemax;
 }

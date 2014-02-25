@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "ofxJSONElement.h"
 #include "ofxUI.h"
+#include "guiPubMed.h"
 
 #define MAXITEMS 35
 #define MAXITEMSDATAS 6
@@ -28,7 +29,6 @@ public:
     void setup();
     void update();
     void draw();
-    void exit();
 
     void keyPressed(int key);
     
@@ -36,34 +36,37 @@ public:
     
     
     //Search ID Functions
-    void starteSearchRequest(string item, string addtype);
+    void changeBasicSearchRequest(string basicSearch);
+    void setBasiceSearchRequest();
+    void starteSearchRequestWithItem(string item, string addtype);
     void addANDSimpleTagRequest(string newitem, string addtype);
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
     void addDataTagRequest(string fromdata, string todata, string type);
+    void addDataTypeRequest(string datatype);
+    void addRelDateRequest(string reldate, string days);
+    void addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax);
+
     string setformatForSearch(string text);
-    
-    //GUI
-    void setupPubMedGUI();
-    void setupPubMedGuiDatas();
-    void guiEvent(ofxUIEventArgs &e);
 
 private:
-
-    //USED IN APP
-    string myVisibleSelItemsArray[MAXITEMS] = {"[Alliation]","[All Fields]", "[Author]", "[Author-Corporate]", "[Author-First]", "[Author - Full]", "[Author - Identifier]", "[Author - Last]", "[Book]", "[EC/RN Number]", "[Editor]", "[Filter]", "[Grant Number]", "[ISBN]", "[Investigator]", "[Investigator - Full]", "[Issue]", "[Journal]", "[Language]", "[Location ID]", "[MeSH Major Topic]", "[MeSH Subheading]", "[MeSH Subheading]", "[Other Term]", "[Pagination]", "[Pharmacological Action]", "[Publication Type]", "[Publisher]", "[Secondary Source ID]", "[Supplementary Concept]", "[Text Word]", "[Title]", "[Title/Abstract]", "[Transliterated Title]", "[Volume]"};
-    vector<string> myVisibleSelItems;
-    
-    string myVisibleDatasSelItemsArray[MAXITEMSDATAS] = {"[Date - Completion]", "[Date - Create]", "[Date - Entrez]","[Date - MeSH]", "[Date - Modification]", "[Date - Publication]"};
-    vector<string> myVisibleDatasSelItems;
-
+	
     //USED IN REQUEST
-    string myRequestSelItemsArray[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading]", "[MeSH%20Subheading]", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    string myRequestSelItemsArray[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
     vector<string> myRequestSelItems;
     
-    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[Date%20-%20Completion]", "[Date%20-%20Create]", "[eDate]","[Date%20-%20MeSH]", "[Date%20-%20Modification]", "[Date%20-%20Publication]",};
+    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
     vector<string> myRequestDataSelItems;
-
+/*
+    Date Completed (DCOM)
+    Date Created (DA)
+    Date Last Revised (LR)
+    Date of Electronic Publication (DEP)
+    Date of Publication (DP)
+    Entrez Date (EDAT)
+    MeSH Date (MHDA)
+*/
+    
     //String for requests
 
     string request;
@@ -91,6 +94,7 @@ private:
     string sDocFetch;
     string sId;
     
+    string sdataType;
     string sMindate;
     string sMaxdate;
     
@@ -98,12 +102,7 @@ private:
     bool parsingSuccessful;
 
     ofxJSONElement myData;
-   
-    
-    //GUIS
-    //Jordi tot lo que vulguis afegir a partir de aqui
-    ofxUICanvas* pmGuiItems1;
-    ofxUICanvas* pmGuiItems2;
+
 
 };
 
@@ -312,6 +311,83 @@ private:
  */
 
 ////////////////////////////////////////////////////////////////
-//JSON OUTPUT
+/*
+ PUBMED ELEMENTS ( Field	Abbreviation )
+ From: http://www.nlm.nih.gov/bsd/mms/medlineelements.html
+ 
+ Abstract 	(AB)
+ Copyright Information (CI)
+ Affiliation (AD)
+ Investigator Affiliation (IRAD)
+ Article Identifier (AID)
+ Author (AU)
+ Author Identifier 	(AUID)
+ Full Author (FAU)
+ Book Title 	(BTI)
+ Collection Title 	(CTI)
+ Comments/Corrections
+ Corporate Author (CN)
+ Create Date 	(CRDT)
+
+ Date Completed (DCOM)
+ Date Created (DA)
+ Date Last Revised (LR)
+ Date of Electronic Publication (DEP)
+ Date of Publication (DP)
+ Entrez Date (EDAT)
+ MeSH Date (MHDA)
+ 
+ Edition 	(EN)
+ Editor and Full Editor Name 	(ED) (FED)
+
+ Gene Symbol (GS)
+ 
+ General Note (GN)
+ Grant Number 	(GR)
+ Investigator Name and Full Investigator Name (IR) (FIR)
+ ISBN 	(ISBN)
+ ISSN (IS)
+ Issue (IP)
+ Journal Title Abbreviation 	(TA)
+ Journal Title 	(JT)
+ Language (LA)
+ Location Identifier 	(LID)
+ Manuscript Identifier 	(MID)
+
+ MeSH Terms(MH)
+ NLM Unique ID (JID)
+ Number of References (RF)
+
+ Other Abstract and Other Abstract Language 	(OAB)(OABL)
+ Other Copyright Information (OCI)
+ Other ID (OID)
+ Other Term (OT)
+ Other Term Owner (OTO)
+ Owner (OWN)
+ 
+ Field	Abbreviation
+ Pagination 	(PG)
+ Personal Name as Subject(PS)
+ Full Personal Name as Subject 	(FPS)
+ Place of Publication 	(PL)
+ Publication History Status(PHST)
+ Publication Status(PST)
+ Publication Type(PT)
+ Publishing Model(PUBM)
+ PubMed Central Identifier 	(PMC)
+ PubMed Central Release 	(PMCR)
+ PubMed Unique Identifier (PMID)
+ Registry Number/EC Number (RN)
+ Substance Name (NM)
+ Secondary Source ID (SI)
+ Source (SO)
+ Space Flight Mission (SFM)
+ Status (STAT)
+ Subset (SB)
+ Title (TI)
+ Transliterated Title (TT)
+ Volume (VI)
+ Volume Title (VTI)
+ */
 
 ////////////////////////////////////////////////////////////////

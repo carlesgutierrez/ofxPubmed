@@ -2,8 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
-    myPubMed.setup();
+    myGuiPubMed.setup();
 }
 
 
@@ -15,18 +14,18 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	myPubMed.draw();
-	
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-	 myPubMed.exit();
+	myGuiPubMed.exit();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
     myPubMed.keyPressed(key);
+	myGuiPubMed.keyPressed(key);
 }
 
 //--------------------------------------------------------------
