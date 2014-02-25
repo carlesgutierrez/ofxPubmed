@@ -36,13 +36,13 @@ void guiPubMed::setup(){
 	tabCanvasH		= 600;
 	toggleW			= 100;
 	toggleH			= lineHeight;
-    newbuttonW      = 10;
-    newbuttonH      = 10;
+//    newbuttonW      = 10;
+//    newbuttonH      = 10;
 	
 	// Search field Canvas
 	searchCanvasX	= tabCanvasX;
 	searchCanvasY	= tabCanvasY;
-	searchCanvasW	= tabCanvasW + newbuttonW*4 ;
+	searchCanvasW	= tabCanvasW ;
 	searchCanvasH	= tabCanvasH;
 
 	// Dropdown list
@@ -152,7 +152,7 @@ void guiPubMed::addSearchField(){
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
     
-    gui->addButton("New", false, newbuttonW, newbuttonH);
+//    gui->addButton("New", false, newbuttonW, newbuttonH);
     
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 
@@ -180,12 +180,12 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	string name = e.widget->getName();
 	int kind = e.widget->getKind();
 	cout << "got event from: " << name << " kind: " << kind << endl;
-
+/*
     //Add a new search Bar
     if(name == "New" && e.widget->getState()== OFX_UI_STATE_OVER ){
         letsAddNewSearchField = true;
     }
-    
+  */
 
 	// check which searchfield has been pressed
 	for (int i = 0 ; i<=searchFields; i++) {
@@ -218,7 +218,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			string output = t->getTextString();
 			cout << output << endl;
 		}
-		/*
+		
 		//---------------------------------------------
 		else if(name == "+"+ofToString(i))
 		{
@@ -233,15 +233,16 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 				
 				if( current[0] == 0 ){
 					cout << "add search field! " << endl;
-					addSearchField();
+					letsAddNewSearchField = true;
+//					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 1){
 					cout << "or" << endl;
-					addSearchField();
+//					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 2){
 					cout << "not" << endl;
-					addSearchField();
+//					addSearchField();
 //					add->setLabelText("-");
 				}else if(current[0] == 3){
 					cout << "-" << endl;
@@ -250,7 +251,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 				}
 			}
 		}
-         */
+        
 
 	}// end for
 	cout << ".." << endl;
