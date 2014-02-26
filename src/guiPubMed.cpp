@@ -14,11 +14,12 @@ guiPubMed::guiPubMed()
 //----------------------------------------------
 guiPubMed::~guiPubMed()
 {
+	delete gui;
 }
 
 //--------------------------------------------------------------
 void guiPubMed::exit() {
-    delete gui;
+
 }
 
 //--------------------------------------------------------------
@@ -60,6 +61,8 @@ void guiPubMed::setup(){
 	addButtonX =	dropDownW + searchCanvasW;
 	addButtonY =	0;
 	addButtonW =	50;
+
+	textString.reserve(10);
 	
 	//setup Search Bar GUi
 	setupPubMedGUI();
@@ -81,13 +84,14 @@ void guiPubMed::update(){
 }
 //--------------------------------------------------------------
 void guiPubMed::setupPubMedGUI(){
-//	gui->setFont("fonts/Arial Unicode.ttf");
 	
-    gui = new ofxUICanvas(searchCanvasX, searchCanvasY, searchCanvasW, searchCanvasH);
-	gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
-
 	int i = searchFields;
 	
+	//	Create gui
+    gui = new ofxUICanvas(searchCanvasX, searchCanvasY, searchCanvasW, searchCanvasH);
+	ofAddListener(gui->newGUIEvent,this,&guiPubMed::guiEvent);
+	gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+
 	// Dropdown list
     gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
 	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
@@ -97,14 +101,13 @@ void guiPubMed::setupPubMedGUI(){
 	w->setLabelText("Select");
 	ofxUIWidgetWithLabel *wwl = (ofxUIWidgetWithLabel *)  w->getLabelWidget();
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
-	
+		
 	// Text Input
-	gui->addTextInput("textField"+ofToString(i), "Type here ", searchFieldW, searchFieldH, searchFieldX, searchFieldY);
+	textString.push_back("type here");
+	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
 	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
 	t->setAutoClear(true);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
 	
 	// Add button
 	gui->addDropDownList("+"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
@@ -112,17 +115,9 @@ void guiPubMed::setupPubMedGUI(){
 	add->setAllowMultiple(false);
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
-//	add->setDrawBack(true);
-//	add->setLabelVisible(false);
-//	add->setState(1);
-//	add->setValue(true);
 	add->setLabelText("And");
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 	
-	gui->addSpacer(50);
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
-	
-    ofAddListener(gui->newGUIEvent,this,&guiPubMed::guiEvent);
 }
 //*searchFields*searchFieldH);
 //--------------------------------------------------------------
@@ -141,27 +136,20 @@ void guiPubMed::addSearchField(){
 	ofxUIWidgetWithLabel *wwl = (ofxUIWidgetWithLabel *)  w->getLabelWidget();
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
-	
 	// Text Input
-	gui->addTextInput("textField"+ofToString(i), "Type here ", searchFieldW, searchFieldH, searchFieldX, searchFieldY);
+	textString.push_back("type here");
+	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
 	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
 	t->setAutoClear(true);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
-	
-	// Add search
+	// Add button
 	gui->addDropDownList("+"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
 	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("+"+ofToString(i));
 	add->setAllowMultiple(false);
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
-    
-//    gui->addButton("New", false, newbuttonW, newbuttonH);
-    
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
-
-	gui->addSpacer(50);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 }
 

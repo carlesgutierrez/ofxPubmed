@@ -97,6 +97,8 @@ private:
 	float dim;
 	float WidgetW;
 	float sliderW;
+	
+	vector<string>	textString;
 		
 };
 
