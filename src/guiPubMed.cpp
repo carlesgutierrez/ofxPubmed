@@ -37,8 +37,6 @@ void guiPubMed::setup(){
 	tabCanvasH		= 600;
 	toggleW			= 100;
 	toggleH			= lineHeight;
-//    newbuttonW      = 10;
-//    newbuttonH      = 10;
 	
 	// Search field Canvas
 	searchCanvasX	= tabCanvasX;
@@ -65,7 +63,7 @@ void guiPubMed::setup(){
 	textString.reserve(10);
 	
 	//search button
-	searchbuttonW	= 200;
+	searchbuttonW	= 190;
 	searchbuttonH	= 30;
 	
 	//setup Search Bar GUi
@@ -97,7 +95,7 @@ void guiPubMed::setupPubMedGUI(){
 	gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
 	
 	// Add Search Button
-    gui->addButton("Search", false, searchbuttonW, searchbuttonH);
+    gui->addButton(" Search", false, searchbuttonW, searchbuttonH);
 
 	// Dropdown list
     gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
@@ -113,7 +111,7 @@ void guiPubMed::setupPubMedGUI(){
 	textString.push_back("type here");
 	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
 	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
-	t->setAutoClear(true);
+	t->setAutoClear(false);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
 	// Add button
@@ -132,7 +130,7 @@ void guiPubMed::addSearchField(){
 	
 	searchFields++;
 	int i = searchFields;
-		
+	
 	// Dropdown list
     gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
 	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
@@ -147,7 +145,7 @@ void guiPubMed::addSearchField(){
 	textString.push_back("type here");
 	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
 	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
-	t->setAutoClear(true);
+	t->setAutoClear(false);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
 	// Add button
@@ -180,13 +178,20 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 
 	string name = e.widget->getName();
 	int kind = e.widget->getKind();
-	cout << "got event from: " << name << " kind: " << kind << endl;
-/*
-    //Add a new search Bar
-    if(name == "New" && e.widget->getState()== OFX_UI_STATE_OVER ){
-        letsAddNewSearchField = true;
+	cout << "got event from: " << name << endl;
+    
+	if(name == "Search"){
+		//event to set Request ready to start
+//        ofNotifyEvent(onStartSearch, searchButtonStatus);
+        
+        cout << "Text to search is: " << endl;
+        //get all textinputs
+        for (int i = 0 ; i<=searchFields; i++) {
+			cout << textString[i] << endl;
+        }
     }
-  */
+
+	
 
 	// check which searchfield has been pressed
 	for (int i = 0 ; i<=searchFields; i++) {
@@ -203,17 +208,16 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 		else if(name == "textField"+ofToString(i))
 		{
 			ofxUITextInput *t = (ofxUITextInput *) e.widget;
-			t->setAutoClear(true);
 			if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
 				cout << "ON ENTER: ";
-				//            ofUnregisterKeyEvents((testApp*)this);
-			
+				textString[i]	=	t->getTextString();
+				
 			}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
 				cout << "ON FOCUS: ";
-			
+				t->setTextString("");
 			}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
 				cout << "ON BLUR: ";
-				//            ofRegisterKeyEvents(this);
+				textString[i]	=	t->getTextString();
 			}
 			
 			string output = t->getTextString();
@@ -229,34 +233,28 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			// get the current selection on the Add dropdown
 			vector <int> current =	add->getSelectedIndeces();
 			cout <<"current size"<< current.size()<< endl;
+
 			for (int j= 0; j<current.size(); j++) {
 				cout <<"current j"<< current[j]<< endl;
 				
 				if( current[0] == 0 ){
 					cout << "add search field! " << endl;
 					letsAddNewSearchField = true;
-//					addSearchField();
-//					add->setLabelText("-");
+
 				}else if(current[0] == 1){
 					cout << "or" << endl;
 					letsAddNewSearchField = true;
-//					addSearchField();
-//					add->setLabelText("-");
+
 				}else if(current[0] == 2){
 					cout << "not" << endl;
 					letsAddNewSearchField = true;
-//					addSearchField();
-//					add->setLabelText("-");
+
 				}else if(current[0] == 3){
 					cout << "-" << endl;
 					bRemoveSearchField = true;
-					removeSearchField();
-//					add->setLabelText("+");
 				}
 			}
 		}
-        
-
 	}// end for
 	cout << ".." << endl;
 }
