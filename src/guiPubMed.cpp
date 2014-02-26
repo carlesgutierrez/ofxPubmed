@@ -47,9 +47,9 @@ void guiPubMed::setup(){
 	searchCanvasH	= tabCanvasH;
 
 	// Dropdown list
-	dropDownX	= 0;
-	dropDownY	= 0;
-	dropDownW	= 190;
+	dropDownX		= 0;
+	dropDownY		= 0;
+	dropDownW		= 190;
 	
 	// Search field Canvas
 	searchFieldX	= dropDownW;
@@ -58,11 +58,15 @@ void guiPubMed::setup(){
 	searchFieldH	= 0;
 
 	// add buuton
-	addButtonX =	dropDownW + searchCanvasW;
-	addButtonY =	0;
-	addButtonW =	50;
+	addButtonX		=	dropDownW + searchCanvasW;
+	addButtonY		=	0;
+	addButtonW		=	50;
 
 	textString.reserve(10);
+	
+	//search button
+	searchbuttonW	= 200;
+	searchbuttonH	= 30;
 	
 	//setup Search Bar GUi
 	setupPubMedGUI();
@@ -91,6 +95,9 @@ void guiPubMed::setupPubMedGUI(){
     gui = new ofxUICanvas(searchCanvasX, searchCanvasY, searchCanvasW, searchCanvasH);
 	ofAddListener(gui->newGUIEvent,this,&guiPubMed::guiEvent);
 	gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+	
+	// Add Search Button
+    gui->addButton("Search", false, searchbuttonW, searchbuttonH);
 
 	// Dropdown list
     gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
@@ -125,7 +132,7 @@ void guiPubMed::addSearchField(){
 	
 	searchFields++;
 	int i = searchFields;
-	
+		
 	// Dropdown list
     gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
 	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
@@ -151,6 +158,7 @@ void guiPubMed::addSearchField(){
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+
 }
 
 //--------------------------------------------------------------

@@ -91,6 +91,9 @@ private:
 	float addButtonW;
 	float addButtonH;
 	
+	// search button
+	float searchbuttonW;
+	float searchbuttonH;
 	
 	bool bsnap;
 	float space;
