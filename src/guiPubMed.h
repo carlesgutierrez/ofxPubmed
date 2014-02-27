@@ -17,10 +17,8 @@ public:
 	guiPubMed();
 	~guiPubMed();
 
-	void setup();
 	void update();
 	void draw();
-	void exit();
 	void keyPressed(int key);
 	
 	
@@ -47,8 +45,11 @@ private:
     void guiEvent(ofxUIEventArgs &e);
     ofxUICanvas *gui;
 
-	int searchFields;
-	int searchFieldsH;
+	int currentSearchBar;
+	int searchBars;
+	int searchBarsW;
+	vector<string>	textString;
+
 	
 	// tabCanvas
 	float tabCanvasX;
@@ -101,7 +102,5 @@ private:
 	float WidgetW;
 	float sliderW;
 	
-	vector<string>	textString;
-		
 };
 
