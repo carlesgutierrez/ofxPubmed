@@ -1,33 +1,17 @@
 #include "guiPubMed.h"
 
 //----------------------------------------------
-
 guiPubMed::guiPubMed()
 {
-	
 	//Load all my Tags in Vectors
     myVisibleSelItems.assign(myVisibleSelItemsArray, myVisibleSelItemsArray+MAXITEMS);
     myVisibleDatasSelItems.assign(myVisibleDatasSelItemsArray, myVisibleDatasSelItemsArray+MAXITEMSDATAS);
     andOrNot.assign(andOrNotArray, andOrNotArray+MAXadd);
-}
-
-//----------------------------------------------
-guiPubMed::~guiPubMed()
-{
-	delete gui;
-}
-
-//--------------------------------------------------------------
-void guiPubMed::exit() {
-
-}
-
-//--------------------------------------------------------------
-
-void guiPubMed::setup(){
-
-	int searchFields= 1;
-//	searchFieldsH	= 100;
+	
+	
+	currentSearchBar= -1;
+	searchBars		= 0;
+	//	searchBarsH	= 100;
 	int lineHeight	= 35;
 	
 	// tabCanvas
@@ -43,7 +27,7 @@ void guiPubMed::setup(){
 	searchCanvasY	= tabCanvasY;
 	searchCanvasW	= tabCanvasW ;
 	searchCanvasH	= tabCanvasH;
-
+	
 	// Dropdown list
 	dropDownX		= 0;
 	dropDownY		= 0;
@@ -54,12 +38,12 @@ void guiPubMed::setup(){
 	searchFieldY	= 0;
 	searchFieldW	= 320;
 	searchFieldH	= 0;
-
+	
 	// add buuton
 	addButtonX		=	dropDownW + searchCanvasW;
 	addButtonY		=	0;
 	addButtonW		=	50;
-
+	
 	textString.reserve(10);
 	
 	//search button
@@ -69,8 +53,14 @@ void guiPubMed::setup(){
 	//setup Search Bar GUi
 	setupPubMedGUI();
 	addSearchField();
-
 }
+
+//----------------------------------------------
+guiPubMed::~guiPubMed()
+{
+	delete gui;
+}
+
 //--------------------------------------------------------------
 void guiPubMed::update(){
     
@@ -87,7 +77,7 @@ void guiPubMed::update(){
 //--------------------------------------------------------------
 void guiPubMed::setupPubMedGUI(){
 	
-	int i = searchFields;
+	int i = searchBars;
 	
 	//	Create gui
     gui = new ofxUICanvas(searchCanvasX, searchCanvasY, searchCanvasW, searchCanvasH);
@@ -98,8 +88,8 @@ void guiPubMed::setupPubMedGUI(){
     gui->addButton(" Search", false, searchbuttonW, searchbuttonH);
 
 	// Dropdown list
-    gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
-	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
+    gui->addDropDownList("dropDown_"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
+	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
 	w->setAllowMultiple(false);
 	w->setAutoClose(true);
 	w->setShowCurrentSelected(true);
@@ -109,14 +99,14 @@ void guiPubMed::setupPubMedGUI(){
 		
 	// Text Input
 	textString.push_back("type here");
-	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
-	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
+	gui->addTextInput("textField_"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
+	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
 	t->setAutoClear(false);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
 	// Add button
-	gui->addDropDownList("+"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
-	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("+"+ofToString(i));
+	gui->addDropDownList("addButton_"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
+	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
 	add->setAllowMultiple(false);
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
@@ -124,16 +114,16 @@ void guiPubMed::setupPubMedGUI(){
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 	
 }
-//*searchFields*searchFieldH);
+
 //--------------------------------------------------------------
 void guiPubMed::addSearchField(){
 	
-	searchFields++;
-	int i = searchFields;
+	searchBars++;
+	int i = searchBars;
 	
 	// Dropdown list
-    gui->addDropDownList("dropDown"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
-	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
+    gui->addDropDownList("dropDown_"+ofToString(i), myVisibleSelItems, dropDownW, dropDownX, dropDownY);
+	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
 	w->setAllowMultiple(false);
 	w->setAutoClose(true);
 	w->setShowCurrentSelected(true);
@@ -143,14 +133,14 @@ void guiPubMed::addSearchField(){
 	
 	// Text Input
 	textString.push_back("type here");
-	gui->addTextInput("textField"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
-	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
+	gui->addTextInput("textField_"+ofToString(i), textString[i], searchFieldW, searchFieldH, searchFieldX, searchFieldY);
+	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
 	t->setAutoClear(false);
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
 	
 	// Add button
-	gui->addDropDownList("+"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
-	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("+"+ofToString(i));
+	gui->addDropDownList("addButton_"+ofToString(i), andOrNot, addButtonW, addButtonX, addButtonY);
+	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
 	add->setAllowMultiple(false);
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
@@ -161,114 +151,102 @@ void guiPubMed::addSearchField(){
 
 //--------------------------------------------------------------
 void guiPubMed::removeSearchField(){
-	int i = searchFields;
-	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown"+ofToString(i));
-	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField"+ofToString(i));
-	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("+"+ofToString(i));
+	int i = searchBars;
+	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
+	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
+	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
 	delete w;
 	delete t;
 	delete add;
 	
-	searchFields--;
+	searchBars--;
 }
 
 //--------------------------------------------------------------
 void guiPubMed::guiEvent(ofxUIEventArgs &e)
 {
-
 	string name = e.widget->getName();
 	int kind = e.widget->getKind();
-	cout << "got event from: " << name << endl;
-    
-	if(name == "Search"){
-		//event to set Request ready to start
-//        ofNotifyEvent(onStartSearch, searchButtonStatus);
-        
-        cout << "Text to search is: " << endl;
-        //get all textinputs
-        for (int i = 0 ; i<=searchFields; i++) {
-			cout << textString[i] << endl;
-        }
-    }
-
+	ofLogVerbose() << "-- New event from: " << name;
 	
-
-	// check which searchfield has been pressed
-	for (int i = 0 ; i<=searchFields; i++) {
+	// Get the current searchBar number
+	if (ofIsStringInString(name, "_")){
+		vector<string> splitted	= ofSplitString(name, "_");
+		currentSearchBar = ofToInt(splitted[1]);
+		//	cout << "searchBars = "<< searchBars << endl;
+		//	cout << "currentS = "<< currentSearchBar << endl;
+	}
+    
+	
+	//---------------------------------------------
+	if(name == " Search"){
+//        ofNotifyEvent(onStartSearch, searchButtonStatus);
+		// NOTIFY Search EVENT HERE
+        ofLogVerbose() << "Do the sarch event ";
+    }
+	
+	//---------------------------------------------
+	else if(name == "textField_"+ofToString(currentSearchBar))
+	{
+		ofxUITextInput *t = (ofxUITextInput *) e.widget;
+		string output = t->getTextString();
+		cout << output << endl;
+		// NOTIFY TextField EVENT HERE
 		
-		//---------------------------------------------
-		if(name == "dropDown"+ofToString(i))
-		{
-			ofxUIDropDownList *dropDown = (ofxUIDropDownList *) e.widget;
-			vector <int> i = dropDown->getSelectedIndeces();
-			//TEST
-			//cout << "ITEM SELECTED: " << elabel->getLabel() << endl;
+		if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
+//			ofLogVerbose() << "ON ENTER:";
+			textString[currentSearchBar]	=	t->getTextString();
+		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
+//			ofLogVerbose() << "ON FOCUS:";
+			t->setTextString("");
+		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
+//			ofLogVerbose() << "ON BLUR:";
+			textString[currentSearchBar]	=	t->getTextString();
 		}
-		//---------------------------------------------
-		else if(name == "textField"+ofToString(i))
+	}
+	
+	//---------------------------------------------
+	else if(name == "And"){
+		ofLogVerbose() << "AND";
+		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+		// NOTIFY EVENT HERE
+	}else if(name == "Or"){
+		ofLogVerbose() << "OR";
+		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+		// NOTIFY EVENT HERE
+	}else if(name == "Not"){
+		ofLogVerbose() << "NOT";
+		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+		// NOTIFY EVENT HERE
+	}else if(name == "-"){
+		ofLogVerbose() << " -";
+		// NOTIFY EVENT HERE
+		//		if(searchBars == currentSearchBar)	bRemoveSearchField = true;
+	}
+	
+	//---------------------------------------------
+	else{
+		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it)
 		{
-			ofxUITextInput *t = (ofxUITextInput *) e.widget;
-			if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
-				cout << "ON ENTER: ";
-				textString[i]	=	t->getTextString();
-				
-			}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
-				cout << "ON FOCUS: ";
-				t->setTextString("");
-			}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
-				cout << "ON BLUR: ";
-				textString[i]	=	t->getTextString();
-			}
-			
-			string output = t->getTextString();
-			cout << output << endl;
-		}
-		
-		//---------------------------------------------
-		else if(name == "+"+ofToString(i))
-		{
-			cout << "*******************************"<< endl;
-			ofxUIDropDownList *add = (ofxUIDropDownList *) e.widget;
-			
-			// get the current selection on the Add dropdown
-			vector <int> current =	add->getSelectedIndeces();
-			cout <<"current size"<< current.size()<< endl;
-
-			for (int j= 0; j<current.size(); j++) {
-				cout <<"current j"<< current[j]<< endl;
-				
-				if( current[0] == 0 ){
-					cout << "add search field! " << endl;
-					letsAddNewSearchField = true;
-
-				}else if(current[0] == 1){
-					cout << "or" << endl;
-					letsAddNewSearchField = true;
-
-				}else if(current[0] == 2){
-					cout << "not" << endl;
-					letsAddNewSearchField = true;
-
-				}else if(current[0] == 3){
-					cout << "-" << endl;
-					bRemoveSearchField = true;
-				}
+			if ((*it)==name){
+				ofLogVerbose() << "Dropdown_"<< currentSearchBar <<" "<< (*it);
+				// NOTIFY Dropdown EVENT HERE
 			}
 		}
-	}// end for
-	cout << ".." << endl;
+	}
+	
+	cout << endl;
 }
 
 
 //--------------------------------------------------------------
 void guiPubMed::keyPressed(int key){
 	
-   /*
+/*
     //Direct Request for Test and apply with RETURN
     if(key == 'l'){
 		cout << "pressed l" << endl;
 		addSearchField();
     }
-    */
-    
+  */
 }
