@@ -37,6 +37,7 @@
 		7F2CD93F681F3C1547B3BF2C /* ofxUIImageButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6280B5FA1CEA20450916E49 /* ofxUIImageButton.cpp */; };
 		7FFCBF79D99A98D381EAF0C1 /* ofxPubMed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E9E5B6F5E04BEE087D08E8 /* ofxPubMed.cpp */; };
 		82845E1F8C90E1F5A99D9868 /* ofxUIWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08A9C84B3CA68561BE01FF37 /* ofxUIWidget.cpp */; };
+		8422373518BFFAA0009CE9EC /* guiPubMedEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8422373318BFFAA0009CE9EC /* guiPubMedEvent.cpp */; };
 		84AECEC55DABE0D256CCE0E1 /* ofxUITextAreaFTGLSimpleLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33D36A2380092CD1C56E19B6 /* ofxUITextAreaFTGLSimpleLayout.cpp */; };
 		933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B40EDA85BEB63E46785BC29 /* tinyxml.cpp */; };
 		9A83D1B3FB64456BC907667F /* ofxUIMinimalSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7216430113F333B8351ED /* ofxUIMinimalSlider.cpp */; };
@@ -201,6 +202,8 @@
 		8178EB9AA3C0268331AF3AF3 /* ofxUIToggleMatrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIToggleMatrix.h; path = ../../../addons/ofxUI/src/ofxUIToggleMatrix.h; sourceTree = SOURCE_ROOT; };
 		828EDF7F6C239EA7B17F32F0 /* ofxUIRectangle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUIRectangle.cpp; path = ../../../addons/ofxUI/src/ofxUIRectangle.cpp; sourceTree = SOURCE_ROOT; };
 		832BDC407620CDBA568B713D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxmlerror.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
+		8422373318BFFAA0009CE9EC /* guiPubMedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiPubMedEvent.cpp; sourceTree = "<group>"; };
+		8422373418BFFAA0009CE9EC /* guiPubMedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiPubMedEvent.h; sourceTree = "<group>"; };
 		856BF5AB0322D0689EE63829 /* ofxUIRangeSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRangeSlider.h; path = ../../../addons/ofxUI/src/ofxUIRangeSlider.h; sourceTree = SOURCE_ROOT; };
 		85E9E5B6F5E04BEE087D08E8 /* ofxPubMed.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxPubMed.cpp; path = src/ofxPubMed.cpp; sourceTree = SOURCE_ROOT; };
 		87035EFE3D4427294D4D1338 /* ofxUIUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIUtils.h; path = ../../../addons/ofxUI/src/ofxUIUtils.h; sourceTree = SOURCE_ROOT; };
@@ -686,6 +689,8 @@
 				932733FCA673E6BC40AFD69D /* ofxPubMed.h */,
 				08CEA42718BBB83900E25D75 /* guiPubMed.cpp */,
 				08CEA42818BBB83900E25D75 /* guiPubMed.h */,
+				8422373318BFFAA0009CE9EC /* guiPubMedEvent.cpp */,
+				8422373418BFFAA0009CE9EC /* guiPubMedEvent.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -837,6 +842,7 @@
 				43BADBB2FE0F17D34B57A705 /* ofxUIScrollableCanvas.cpp in Sources */,
 				3CB7D2F1C94EDF626EA83342 /* ofxUIScrollableSliderCanvas.cpp in Sources */,
 				71D220E16245067F59A3637C /* ofxUIScrollSlider.cpp in Sources */,
+				8422373518BFFAA0009CE9EC /* guiPubMedEvent.cpp in Sources */,
 				740A58CBFDFE578C83A349AF /* ofxUISlider.cpp in Sources */,
 				ADE7C2AFC51E3F7E5E389026 /* ofxUISortableList.cpp in Sources */,
 				BFEFCE32DAFE10A8EB519F6C /* ofxUISpacer.cpp in Sources */,

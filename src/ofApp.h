@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxPubMed.h"
-#include "guiPubMed.h"
 
 class ofApp : public ofBaseApp{
 public:
@@ -22,5 +21,4 @@ public:
     void gotMessage(ofMessage msg);
     
     ofxPubMed myPubMed;
-    guiPubMed myGuiPubMed;
 };
