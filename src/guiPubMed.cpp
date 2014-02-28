@@ -8,6 +8,12 @@ guiPubMed::guiPubMed()
     myVisibleDatasSelItems.assign(myVisibleDatasSelItemsArray, myVisibleDatasSelItemsArray+MAXITEMSDATAS);
     andOrNot.assign(andOrNotArray, andOrNotArray+MAXadd);
 	
+	//Request
+	//The same tags but with not spaces admited for html requests
+    myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
+    myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
+	andOrNotRequest.assign(andOrNotRequestedArray, andOrNotRequestedArray+MAXadd);
+	
 	
 	currentSearchBar= -1;
 	searchBars		= 0;
@@ -44,15 +50,21 @@ guiPubMed::guiPubMed()
 	addButtonY		=	0;
 	addButtonW		=	50;
 	
-	textString.reserve(10);
+	//Textes to send //resize to use them as array
+	textString.resize(MAXSEARCHBARS);
+	reftypeString.resize(MAXSEARCHBARS);
+	conjuctiontypeString.resize(MAXSEARCHBARS);
+	andOrNotRequest.resize(MAXSEARCHBARS);
 	
 	//search button
 	searchbuttonW	= 190;
 	searchbuttonH	= 30;
+
 	
 	//setup Search Bar GUi
 	setupPubMedGUI();
 	addSearchField();
+
 }
 
 //----------------------------------------------
@@ -152,14 +164,48 @@ void guiPubMed::addSearchField(){
 //--------------------------------------------------------------
 void guiPubMed::removeSearchField(){
 	int i = searchBars;
-	ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
-	ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
-	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
-	delete w;
-	delete t;
-	delete add;
 	
-	searchBars--;
+	if(i>0){
+		ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
+		ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
+		ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
+		delete w;
+		delete t;
+		delete add;
+		
+		searchBars--;
+	}
+}
+
+//--------------------------------------------------------------
+void guiPubMed::updateRequest(){
+	
+	//Clear Esearch Request to basic mode
+	bool searchButtonStatus = true;
+	
+	guiPubMedEvent newEvent; //if this would be called as static, will save last values used...
+	
+	ofLogVerbose("GuiVerbose") <<"updateRequest num searchBars: " << searchBars << endl;
+
+	for (int i = 0 ; i <= searchBars - 1; i++) {
+		
+		//event to set Request ready to start
+		string conjuctiontype = conjuctiontypeString[i]; // +AND+
+		string reftype = reftypeString[i]; // "[Title]"
+		string text =  textString[i];
+		
+		if(conjuctiontype.empty())conjuctiontype = "+AND+";
+		if(reftype.empty())conjuctiontype = "[All%20Fields]";
+		if(!text.empty())newEvent.query += text + reftype + conjuctiontype;
+		
+		ofLogVerbose("GuiVerbose") << "Query under construcction: " << newEvent.query << endl;
+	}
+	
+	string text =  textString[searchBars];
+	string reftype = reftypeString[searchBars]; // "[Title]"
+	newEvent.query += text + reftype;
+	
+	ofNotifyEvent(guiPubMedEvent::onUpdateSearch, newEvent);
 }
 
 //--------------------------------------------------------------
@@ -167,7 +213,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 {
 	string name = e.widget->getName();
 	int kind = e.widget->getKind();
-	ofLogVerbose() << "-- New event from: " << name;
+	ofLogVerbose("GuiVerbose")<< "-- New event from: " << name;
 	
 	// Get the current searchBar number
 	if (ofIsStringInString(name, "_")){
@@ -178,60 +224,74 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	}
     
 	
-	//---------------------------------------------
+	//--------------------------------set a BasiceSearch Request-------------
 	if(name == " Search"){
-//        ofNotifyEvent(onStartSearch, searchButtonStatus);
 		// NOTIFY Search EVENT HERE
-        ofLogVerbose() << "Do the sarch event ";
+        ofLogVerbose("GuiVerbose")<< "Click Search Button";
+		if(e.widget->getState() == OFX_UI_STATE_OVER){
+			ofLogVerbose("GuiVerbose")<< "Do the sarch event::updateRequest";
+			updateRequest();
+		}
     }
-	
 	//---------------------------------------------
 	else if(name == "textField_"+ofToString(currentSearchBar))
 	{
 		ofxUITextInput *t = (ofxUITextInput *) e.widget;
 		string output = t->getTextString();
-		cout << output << endl;
-		// NOTIFY TextField EVENT HERE
+		ofLogVerbose("GuiVerbose") << "Pick textInput where selected text was: " << output << endl;
 		
 		if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER){
-//			ofLogVerbose() << "ON ENTER:";
-			textString[currentSearchBar]	=	t->getTextString();
+			textString[currentSearchBar]	=	t->getTextString(); //ofLogVerbose("GuiVerbose")<< "ON ENTER:";
 		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
-//			ofLogVerbose() << "ON FOCUS:";
-			t->setTextString("");
+			t->setTextString(""); //ofLogVerbose("GuiVerbose")<< "ON FOCUS:";
 		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
-//			ofLogVerbose() << "ON BLUR:";
-			textString[currentSearchBar]	=	t->getTextString();
+			textString[currentSearchBar]	=	t->getTextString();//ofLogVerbose("GuiVerbose")<< "ON BLUR:";
 		}
 	}
 	
 	//---------------------------------------------
 	else if(name == "And"){
-		ofLogVerbose() << "AND";
-		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+
+		ofLogVerbose("GuiVerbose") << "AND";
+		if(searchBars == currentSearchBar){
+			letsAddNewSearchField = true;
+			conjuctiontypeString[currentSearchBar] = andOrNotRequest[0];
+		}
 		// NOTIFY EVENT HERE
 	}else if(name == "Or"){
-		ofLogVerbose() << "OR";
-		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+		ofLogVerbose("GuiVerbose") << "OR";
+		if(searchBars == currentSearchBar){
+			letsAddNewSearchField = true;
+			conjuctiontypeString[currentSearchBar] = andOrNotRequest[1];
+		}
 		// NOTIFY EVENT HERE
 	}else if(name == "Not"){
-		ofLogVerbose() << "NOT";
-		if(searchBars == currentSearchBar)	letsAddNewSearchField = true;
+		ofLogVerbose("GuiVerbose") << "NOT";
+		if(searchBars == currentSearchBar){
+			letsAddNewSearchField = true;
+			conjuctiontypeString[currentSearchBar] = andOrNotRequest[2];
+		}
 		// NOTIFY EVENT HERE
 	}else if(name == "-"){
-		ofLogVerbose() << " -";
+		ofLogVerbose("GuiVerbose") << " -";
 		// NOTIFY EVENT HERE
-		//		if(searchBars == currentSearchBar)	bRemoveSearchField = true;
+		// if(searchBars == currentSearchBar)	bRemoveSearchField = true;
 	}
 	
 	//---------------------------------------------
 	else{
-		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it)
-		{
+		
+		//return myRequestSelItems from my myVisibleSelItems
+		int myit = 0;
+		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it){
+			
 			if ((*it)==name){
-				ofLogVerbose() << "Dropdown_"<< currentSearchBar <<" "<< (*it);
+				ofLogVerbose("GuiVerbose")<< "Dropdown_"<< currentSearchBar <<" "<< (*it);
 				// NOTIFY Dropdown EVENT HERE
+				reftypeString[currentSearchBar]= myRequestSelItems[myit];
+				ofLogVerbose("GuiVerbose")<< "reftypeString[currentSearchBar]= "<< reftypeString[currentSearchBar] << endl;
 			}
+			myit++;
 		}
 	}
 	
@@ -242,6 +302,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 //--------------------------------------------------------------
 void guiPubMed::keyPressed(int key){
 	
+
 /*
     //Direct Request for Test and apply with RETURN
     if(key == 'l'){
