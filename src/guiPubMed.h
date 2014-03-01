@@ -19,8 +19,9 @@ public:
 	~guiPubMed();
 
 	void update();
-	void draw();
 	void keyPressed(int key);
+	//if this would be called as static, will save last values used...
+	guiPubMedEvent newEvent;
 	
 private:
     
@@ -44,24 +45,25 @@ private:
     string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
     vector<string> myRequestDataSelItems;
 	
-	string andOrNotRequestedArray [MAXadd] = {"+And+", "+Or+", "+Not+", "-"}; // TODO remove "-" to avoid search problems since we use directely this string request from gui.
+	string andOrNotRequestedArray [MAXadd] = {"+And+", "+Or+", "+Not+", "-"}; 
 	vector<string> andOrNotRequest;
 	
 	/////////
 	//Data Reserved to send by events
+	string			requestString;
 	vector<string>	textString;
 	vector<string>	reftypeString;
 	vector<string>	conjuctiontypeString;
 	void updateRequest();
-
+	void sendRequest();
 
     //GUIS
-    void setupPubMedGUI();
+    ofxUICanvas *gui;
+	void setupPubMedGUI();
     void addSearchField();
 	void setupPubMedGuiDatas();
 	void removeSearchField();
     void guiEvent(ofxUIEventArgs &e);
-    ofxUICanvas *gui;
 
 	int currentSearchBar;
 	int searchBars;

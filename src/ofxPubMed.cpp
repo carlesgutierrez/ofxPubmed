@@ -83,7 +83,7 @@ void ofxPubMed::draw(){
     ofSetColor(0, 0, 0);
     ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
     ofDrawBitmapString("The actual request is = ", x, bottomRequest-TEXTLINEHEIGHT);
-    ofDrawBitmapString(request, x, bottomRequest);
+    ofDrawBitmapString(myGuiPubMed.newEvent.query, x, bottomRequest);
     
     //Results json
     int textwidth = 130;

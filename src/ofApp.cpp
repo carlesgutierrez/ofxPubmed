@@ -2,8 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofLog(OF_LOG_VERBOSE, "GuiVerbose");
-	ofSetLogLevel("GuiVerbose", OF_LOG_VERBOSE); //check COUTS from Collisions
+	ofLog(OF_LOG_VERBOSE, "guiPubMed");
+	ofSetLogLevel("guiPubMed", OF_LOG_VERBOSE); //check COUTS from Collisions
 }
 
 
@@ -33,8 +33,8 @@ void ofApp::keyPressed(int key){
 		ofSetLogLevel(OF_LOG_VERBOSE); //Set active all Verbose commets (OF verboses included)
 	}
 	else if(key == OF_KEY_F3){
-		ofLog(OF_LOG_VERBOSE, "GuiVerbose");
-		ofSetLogLevel("GuiVerbose", OF_LOG_VERBOSE); //check COUTS from Collisions
+		ofLog(OF_LOG_VERBOSE, "guiPubMed");
+		ofSetLogLevel("guiPubMed", OF_LOG_VERBOSE); //check COUTS from Collisions
 	}
 }
 
