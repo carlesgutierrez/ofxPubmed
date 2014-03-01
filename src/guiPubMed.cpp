@@ -161,18 +161,20 @@ void guiPubMed::addSearchField(){
 
 //--------------------------------------------------------------
 void guiPubMed::removeSearchField(){
+
+	// Remove last search Bar
 	int i = searchBars;
-	
 	if(i>0){
-		ofxUIDropDownList *w = (ofxUIDropDownList *)  gui->getWidget("dropDown_"+ofToString(i));
-		ofxUITextInput *t = (ofxUITextInput *)  gui->getWidget("textField_"+ofToString(i));
-		ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i));
-		delete w;
-		delete t;
-		delete add;
-		
+		gui->removeWidget("dropDown_"+ofToString(i));
+		gui->removeWidget("textField_"+ofToString(i));
+		gui->removeWidget("addButton_"+ofToString(i));
 		searchBars--;
 	}
+	
+	// Set the last label on "-"
+	ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i-1));
+	add->setLabelText("-");
+	
 }
 
 //--------------------------------------------------------------
@@ -259,7 +261,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 
 	}else if(name == "-"){
 		ofLogVerbose("guiPubMed") << "-";
-		// if(searchBars == currentSearchBar)	bRemoveSearchField = true;
+		if(searchBars == currentSearchBar)	bRemoveSearchField = true;
 	}
 	
 	//---------------------------------------------
