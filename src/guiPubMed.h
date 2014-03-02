@@ -113,6 +113,8 @@ private:
 	// search button
 	float searchbuttonW;
 	float searchbuttonH;
+	float searchbuttonX;
+	float searchbuttonY;
 	
 	bool bsnap;
 	float space;

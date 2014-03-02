@@ -59,12 +59,13 @@ guiPubMed::guiPubMed()
 	//search button
 	searchbuttonW	= 190;
 	searchbuttonH	= 30;
-
+	searchbuttonX	= searchCanvasW/2-searchbuttonW/2;
+	searchbuttonY	= searchCanvasH-searchbuttonH-OFX_UI_GLOBAL_WIDGET_SPACING;
 	
 	//setup Search Bar GUi
 	setupPubMedGUI();
 	addSearchField();
-
+	addSearchField();
 }
 
 //----------------------------------------------
@@ -97,7 +98,13 @@ void guiPubMed::setupPubMedGUI(){
 	gui->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
 	
 	// Add Search Button
-    gui->addLabelButton("Search", false, searchbuttonW, searchbuttonH);
+	ofxUILabelButton* search = new ofxUILabelButton("Search",
+													false,
+													searchbuttonW,
+													searchbuttonH,
+													searchbuttonX,
+													searchbuttonY);
+	gui -> addWidget(search	);
 }
 
 //--------------------------------------------------------------
