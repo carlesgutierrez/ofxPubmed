@@ -75,21 +75,23 @@ guiPubMed::~guiPubMed()
 }
 
 //--------------------------------------------------------------
-void guiPubMed::update(){
-    
-    if(letsAddNewSearchField){
+void guiPubMed::update()
+{
+    if(letsAddNewSearchField)
+	{
         addSearchField();
         letsAddNewSearchField = false;
     }
 	
-	if(bRemoveSearchField){
+	if(bRemoveSearchField)
+	{
         removeSearchField();
         bRemoveSearchField = false;
     }
 }
 //--------------------------------------------------------------
-void guiPubMed::setupPubMedGUI(){
-	
+void guiPubMed::setupPubMedGUI()
+{
 	int i = searchBars;
 	
 	//	Create gui
@@ -108,8 +110,8 @@ void guiPubMed::setupPubMedGUI(){
 }
 
 //--------------------------------------------------------------
-void guiPubMed::addSearchField(){
-	
+void guiPubMed::addSearchField()
+{
 	searchBars++;
 	int i = searchBars;
 	
@@ -146,12 +148,13 @@ void guiPubMed::addSearchField(){
 	add->setAutoClose(true);
 	add->setShowCurrentSelected(true);
 	add->setLabelText("-");
+	if(searchBars == 1)	add->setLabelText("And");
 	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 }
 
 //--------------------------------------------------------------
-void guiPubMed::removeSearchField(){
-
+void guiPubMed::removeSearchField()
+{
 	// Remove last search Bar
 	int i = searchBars;
 	if(i>1){
@@ -168,14 +171,14 @@ void guiPubMed::removeSearchField(){
 }
 
 //--------------------------------------------------------------
-void guiPubMed::sendRequest(){
-
+void guiPubMed::sendRequest()
+{
 	ofNotifyEvent(guiPubMedEvent::onUpdateSearch, newEvent);
 	
 }
 //--------------------------------------------------------------
-void guiPubMed::updateRequest(){
-	
+void guiPubMed::updateRequest()
+{	
 	newEvent.query="";
 		
 //	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
@@ -213,7 +216,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	
 	//---------------------------------------------
 	if(name == "Search"){
-		if(e.widget->getState() == OFX_UI_STATE_OVER){
+		if(e.widget->getState() == OFX_UI_STATE_OVER)
+		{
 			ofLogVerbose("guiPubMed")<< "Do the sarch.";
 			sendRequest();
 		}
@@ -278,13 +282,14 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	}
 	
 	//---------------------------------------------
-	else{
-		
+	else
+	{
 		//return myRequestSelItems from my myVisibleSelItems
 		int myit = 0;
-		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it){
-			
-			if ((*it)==name){
+		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it)
+		{
+			if ((*it)==name)
+			{
 				ofLogVerbose("guiPubMed")<< "Dropdown_"<< currentSearchBar <<" "<< (*it);
 				reftypeString[currentSearchBar]= myRequestSelItems[myit];
 //				ofLogVerbose("guiPubMed")<< "reftypeString[currentSearchBar]= "<< reftypeString[currentSearchBar];
@@ -299,7 +304,6 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 
 //--------------------------------------------------------------
 void guiPubMed::keyPressed(int key){
-	
 
 /*
     //Direct Request for Test and apply with RETURN
