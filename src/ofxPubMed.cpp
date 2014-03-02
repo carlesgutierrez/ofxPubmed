@@ -25,7 +25,7 @@ ofxPubMed::ofxPubMed(){
     sUseHist = "&usehistory=";  //y
     
     //Html commands
-    sSpaceCit =  "%0D";
+    sSpaceCit = "%0D";
     sSlash = "%2F";
     sQuotes = "%22";
     
@@ -44,10 +44,6 @@ ofxPubMed::ofxPubMed(){
     //search Document with Id
     sDocFetch = "efetch.fcgi?";
     sId = "&id=";
-
-	//The same tags but with not spaces admited for html requests
-    myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
-    myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
     
     //Main control variables
     request = "empty";
@@ -56,9 +52,14 @@ ofxPubMed::ofxPubMed(){
     
     //json
     myData.clear();
+	
+	//event
+	ofAddListener(guiPubMedEvent::onUpdateSearch, this, &ofxPubMed::listenerAddTextSearchBar);
+	
 }
 //--------------------------------------------------------------
 ofxPubMed::~ofxPubMed(){
+	
 }
 
 //--------------------------------------------------------------
@@ -67,7 +68,7 @@ void ofxPubMed::setup(){
 }
 //--------------------------------------------------------------
 void ofxPubMed::update(){
-    
+	 myGuiPubMed.update();
 }
 //--------------------------------------------------------------
 void ofxPubMed::draw(){
@@ -82,7 +83,7 @@ void ofxPubMed::draw(){
     ofSetColor(0, 0, 0);
     ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
     ofDrawBitmapString("The actual request is = ", x, bottomRequest-TEXTLINEHEIGHT);
-    ofDrawBitmapString(request, x, bottomRequest);
+    ofDrawBitmapString(myGuiPubMed.newEvent.query, x, bottomRequest);
     
     //Results json
     int textwidth = 130;
@@ -152,10 +153,8 @@ void ofxPubMed::draw(){
 //--------------------------------------------------------------
 void ofxPubMed::keyPressed(int key){
 
-    if (key == ' ') {
-        setBasiceSearchRequest();
-    }
-    
+	myGuiPubMed.keyPressed(key);
+	
     //Direct Request for Test and apply with RETURN
     if(key == '1'){
         request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&datetype=edat&mindate=2011&maxdate=2012";
@@ -195,8 +194,7 @@ void ofxPubMed::keyPressed(int key){
     //Apply request Type
     //Add Json request
     if(key == OF_KEY_RETURN){
-        applyRequest();
-        bHitRequest = true;
+		//apply manual request?
     }
 
     //Reset actual request
@@ -223,10 +221,17 @@ void ofxPubMed::applyRequest() {
 }
 
 //--------------------------------------------------------------
-void ofxPubMed::setBasiceSearchRequest(){
+void ofxPubMed::resetBase(){
     request.clear();
     request += sBaseRequest;
 }
+
+//--------------------------------------------------------------
+void ofxPubMed::reseteSearch(){
+	resetBase();
+    request += sBasicSearching + sDatabase + sTerm;
+}
+
 //--------------------------------------------------------------
 string ofxPubMed::setformatForSearch(string text){
     std::replace( text.begin(), text.end(), ' ', '|');
@@ -246,6 +251,11 @@ void ofxPubMed::starteSearchRequestWithItem(string item, string addtype){
     
     //example
     //http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=climb[All Fields] AND strech[All Fields]
+}
+//--------------------------------------------------------------
+void ofxPubMed::addTagRequest(string query){
+    request += query;
+    cout << "Add TAG Request, now request is= " << request << endl;
 }
 
 //--------------------------------------------------------------
@@ -288,3 +298,17 @@ void ofxPubMed::addRelDateRequest(string reldate, string days){
 void ofxPubMed::addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax){
     request += datemin + typedatemin + datemax + typedatemax;
 }
+
+//listener from gui
+//--------------------------------------------------------------
+void ofxPubMed::listenerAddTextSearchBar(guiPubMedEvent & args) {
+   
+	reseteSearch();
+	
+	ofLogVerbose("GuiVerbose")<< "Addind and Apply query (by listener). Query: " << args.query << endl;
+	addTagRequest(setformatForSearch(args.query));
+	
+	applyRequest();
+	bHitRequest = true;
+}
+

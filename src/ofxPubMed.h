@@ -6,17 +6,17 @@
 //
 //
 
-#ifndef __httpRequestPubMed__ofxPubMed__
-#define __httpRequestPubMed__ofxPubMed__
+#pragma once
 
 #include <iostream>
 #include "ofMain.h"
 #include "ofxJSONElement.h"
-//#include "ofxUI.h"
+#include "guiPubMedEvent.h"
 #include "guiPubMed.h"
 
-#define MAXITEMS 35
-#define MAXITEMSDATAS 6
+
+//#define MAXITEMS 35
+//#define MAXITEMSDATAS 6
 #define TEXTLINEHEIGHT 24
 
 class ofxPubMed {
@@ -37,9 +37,12 @@ public:
     
     //Search ID Functions
     void changeBasicSearchRequest(string basicSearch);
-    void setBasiceSearchRequest();
+	void resetBase();
+	void reseteSearch();
+	
     void starteSearchRequestWithItem(string item, string addtype);
-    void addANDSimpleTagRequest(string newitem, string addtype);
+	void addTagRequest(string query);
+	void addANDSimpleTagRequest(string newitem, string addtype);
     void addORSimpleTagRequest(string newitem, string addtype);
     void addConsecutiveTagRequest(string newitem, string addtype);
     void addDataTagRequest(string fromdata, string todata, string type);
@@ -48,15 +51,16 @@ public:
     void addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax);
 
     string setformatForSearch(string text);
+	
+	//events
+	void listenerStartSearchBar(bool & args);
+	void listenerAddTextSearchBar(guiPubMedEvent & args);
+	
+	//gui
+	guiPubMed myGuiPubMed;
 
 private:
 	
-    //USED IN REQUEST
-    string myRequestSelItemsArray[MAXITEMS] = {"[Alliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
-    vector<string> myRequestSelItems;
-    
-    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
-    vector<string> myRequestDataSelItems;
 /*
     Date Completed (DCOM)
     Date Created (DA)
@@ -70,6 +74,7 @@ private:
     //String for requests
 
     string request;
+	
     string sBaseRequest;
     string sDatabase;
     string sBasicSearching;
@@ -102,11 +107,7 @@ private:
     bool parsingSuccessful;
 
     ofxJSONElement myData;
-
-
 };
-
-#endif /* defined(__httpRequestPubMed__ofxPubMed__) */
 
 ////////////////////////////////////////////////////////////////
 //Manual: http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.ESearch

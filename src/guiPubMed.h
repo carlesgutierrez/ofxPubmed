@@ -2,13 +2,14 @@
 
 #include "ofMain.h"
 #include "ofxUI.h"
-//#include "guiEvent.h"
-#include "ofxPubMed.h"
+
+#include "guiPubMedEvent.h"
 
 
 #define MAXITEMS 34
 #define MAXITEMSDATAS 6
 #define MAXadd 4
+#define MAXSEARCHBARS 10
 
 class guiPubMed {
 
@@ -18,38 +19,55 @@ public:
 	~guiPubMed();
 
 	void update();
-	void draw();
 	void keyPressed(int key);
-	
+	//if this would be called as static, will save last values used...
+	guiPubMedEvent newEvent;
 	
 private:
     
     bool letsAddNewSearchField;
 	bool bRemoveSearchField;
 	
-	//USED IN APP
-    string myVisibleSelItemsArray [MAXITEMS] = {"Alliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
+	/////////
+	//USED IN APP (Visible)
+    string myVisibleSelItemsArray [MAXITEMS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
     vector<string> myVisibleSelItems;
-    
     string myVisibleDatasSelItemsArray [MAXITEMSDATAS] = {"Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication"};
     vector<string> myVisibleDatasSelItems;
-
 	string andOrNotArray [MAXadd] = {"And", "Or", "Not", "-"};
     vector<string> andOrNot;
+	/////////
+	//TO SEND TO HTTP (Request)
+	//USED IN REQUEST
+    string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    vector<string> myRequestSelItems;
+    
+    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
+    vector<string> myRequestDataSelItems;
 	
+	string andOrNotRequestedArray [MAXadd] = {"+And+", "+Or+", "+Not+", "-"}; 
+	vector<string> andOrNotRequest;
+	
+	/////////
+	//Data Reserved to send by events
+	string			requestString;
+	vector<string>	textString;
+	vector<string>	reftypeString;
+	vector<string>	conjuctiontypeString;
+	void updateRequest();
+	void sendRequest();
+
     //GUIS
-    void setupPubMedGUI();
+    ofxUICanvas *gui;
+	void setupPubMedGUI();
     void addSearchField();
 	void setupPubMedGuiDatas();
 	void removeSearchField();
     void guiEvent(ofxUIEventArgs &e);
-    ofxUICanvas *gui;
 
 	int currentSearchBar;
 	int searchBars;
 	int searchBarsW;
-	vector<string>	textString;
-
 	
 	// tabCanvas
 	float tabCanvasX;
@@ -95,6 +113,8 @@ private:
 	// search button
 	float searchbuttonW;
 	float searchbuttonH;
+	float searchbuttonX;
+	float searchbuttonY;
 	
 	bool bsnap;
 	float space;
