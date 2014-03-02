@@ -15,8 +15,8 @@
 #include "guiPubMed.h"
 
 
-#define MAXITEMS 35
-#define MAXITEMSDATAS 6
+//#define MAXITEMS 35
+//#define MAXITEMSDATAS 6
 #define TEXTLINEHEIGHT 24
 
 class ofxPubMed {
