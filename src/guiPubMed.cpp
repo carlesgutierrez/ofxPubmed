@@ -180,21 +180,32 @@ void guiPubMed::sendRequest()
 void guiPubMed::updateRequest()
 {	
 	newEvent.query="";
+	string conjuctiontype;
+	string reftype;
+	string text;
 		
-//	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
-
-	for (int i = 1 ; i <= searchBars; i++)
-	{
+	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
+	//TODO Check if textInputs are empty
+	//TODO Then move searchBars where to start search
+	
+	//Open brakets
+	string openBraket = "(";
+	for (int i = 0; i <= searchBars-2; i++) newEvent.query += openBraket;
+	
+	for (int i = 0 ; i <= searchBars; i++){
 		//event to set Request ready to start
-		string conjuctiontype = conjuctiontypeString[i]; // +AND+
-		string reftype = reftypeString[i]; // "[Title]"
-		string text =  textString[i];
-
-		cout <<"conjuctiontype ="<<conjuctiontype<< endl;
+		conjuctiontype = conjuctiontypeString[i]; // +AND+
+		reftype = reftypeString[i]; // "[Title]"
+		text =  textString[i];
 		
+		string closeBraket = "";
+		if(i!=searchBars)closeBraket = ")";
+
+		if(conjuctiontype.empty()&&i!=searchBars)conjuctiontype = "+AND+";
 		if(reftype.empty())reftype = "[All%20Fields]";
-		if(!text.empty())newEvent.query += text + reftype + conjuctiontype;
+		if(!text.empty())newEvent.query += text + reftype + closeBraket + conjuctiontype;
 	}
+	
 	ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
 }
 
@@ -297,6 +308,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			myit++;
 		}
 	}
+	
+	//Finally update current textInpunt and parameters into the requests string
 	updateRequest();
 	cout << endl;
 }

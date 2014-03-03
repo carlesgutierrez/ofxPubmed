@@ -51,7 +51,10 @@ ofxPubMed::ofxPubMed(){
     bHitRequest = false;
     
     //json
-    myData.clear();
+	retMode = "&retmode=json";
+	retAbstrack = "&rettype=abstract";
+    myRequestData.clear();
+	//myAbstrData
 	
 	//event
 	ofAddListener(guiPubMedEvent::onUpdateSearch, this, &ofxPubMed::listenerAddTextSearchBar);
@@ -75,73 +78,78 @@ void ofxPubMed::draw(){
     
     int x = 20;
     int y = 40;
-    int bottomText = ofGetHeight()-100;
-    int bottomRequest = ofGetHeight()-50;
-    int rightArea = ofGetWidth()-500;
-    
- 
+	
+    int bottomText = ofGetHeight()-ofGetHeight()*0.2;
+    int bottomRequest = ofGetHeight()-ofGetHeight()*0.1;
+    int rightArea = ofGetWidth()*0.2;
+	int textwidth = 130;
+	
+	int xwarnings = 150;
+	int tabwarnings = 150;
+	int accumPos = 100;
+	
     ofSetColor(0, 0, 0);
     ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
     ofDrawBitmapString("The actual request is = ", x, bottomRequest-TEXTLINEHEIGHT);
     ofDrawBitmapString(myGuiPubMed.newEvent.query, x, bottomRequest);
     
     //Results json
-    int textwidth = 130;
+   
     ofDrawBitmapString("[PMID] results:", rightArea - textwidth, y);
 
     //Draw results
-    if(myData["esearchresult"]["idlist"].size()<1)
+    if(myRequestData["esearchresult"]["idlist"].size()<1)
     ofDrawBitmapString("No items founds", rightArea, y);
     
-    for(int i=0; i< myData["esearchresult"]["idlist"].size(); i++)
+    for(int i=0; i< myRequestData["esearchresult"]["idlist"].size(); i++)
 	{
-		std::string text  = myData["esearchresult"]["idlist"][i].asString();
+		std::string text  = myRequestData["esearchresult"]["idlist"][i].asString();
 		ofDrawBitmapString(text, rightArea, i*TEXTLINEHEIGHT+y);
 	}
     
     //Draw errors
-    vector <string> errors  = myData["esearchresult"]["errorlist"].getMemberNames();
+    vector <string> errors  = myRequestData["esearchresult"]["errorlist"].getMemberNames();
     for(int i=0; i< errors.size(); i++)
 	{
         
         if(i==0){
-            int numfieldsnotfound = myData["esearchresult"]["errorlist"]["fieldsnotfound"].size();
-            if(numfieldsnotfound)ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+            int numfieldsnotfound = myRequestData["esearchresult"]["errorlist"]["fieldsnotfound"].size();
+            if(numfieldsnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
         }
         else{
-            int numphrasesnotfound = myData["esearchresult"]["errorlist"]["phrasesnotfound"].size();
-            if(numphrasesnotfound)ofDrawBitmapString(errors[i], rightArea, y+(i+1)*TEXTLINEHEIGHT);
+            int numphrasesnotfound = myRequestData["esearchresult"]["errorlist"]["phrasesnotfound"].size();
+            if(numphrasesnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
         }
         
     }
     
     //Draw Warnings
-    int accumPos = 0;
-    vector <string> warnings  = myData["esearchresult"]["warninglist"].getMemberNames();
+    vector <string> warnings  = myRequestData["esearchresult"]["warninglist"].getMemberNames();
     for(int i=0; i< warnings.size(); i++)
 	{
-        int numwarnings = myData["esearchresult"]["warninglist"]["outputmessages"].size();
+        int numwarnings = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
         if(i==0)accumPos += y + TEXTLINEHEIGHT + (i)*TEXTLINEHEIGHT;
         
         if(i==0){ // outputmessages
-            int numOutputMessages = myData["esearchresult"]["warninglist"]["outputmessages"].size();
-            if(numOutputMessages)ofDrawBitmapString(warnings[i], rightArea, accumPos);
+            int numOutputMessages = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
+            if(numOutputMessages)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
             for (int j=0; j< numOutputMessages;j++) {
                 accumPos += (j)*TEXTLINEHEIGHT;
-                ofDrawBitmapString(myData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+200, accumPos);
+                ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
             }
         }
         else if(i==1){ // phrasesignored
             accumPos += TEXTLINEHEIGHT;
-            int numphrasesignored = myData["esearchresult"]["warninglist"]["phrasesignored"].size();
-            if(numphrasesignored>0)ofDrawBitmapString(warnings[i], rightArea, accumPos);
+            int numphrasesignored = myRequestData["esearchresult"]["warninglist"]["phrasesignored"].size();
+            if(numphrasesignored>0)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
             for (int j=0; j< numphrasesignored;j++) {
-                
+				accumPos += (j)*TEXTLINEHEIGHT;
+                ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["phrasesignored"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
             }
         }
         else if(i==2){ // quotedphrasesnotfound
             accumPos += TEXTLINEHEIGHT;
-            ofDrawBitmapString(warnings[i], rightArea, accumPos);
+            ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
         }
         
     }
@@ -205,14 +213,14 @@ void ofxPubMed::keyPressed(int key){
 //--------------------------------------------------------------
 void ofxPubMed::applyRequest() {
     
-    myData.clear();
+    myRequestData.clear();
     
     // Now parse the JSON
-    parsingSuccessful = myData.open(request+"&retmode=json");
+    parsingSuccessful = myRequestData.open(request+retMode);
     
     if (parsingSuccessful) {
-        cout << myData.getRawString(true) << endl;
-        cout << "esearchresult size= " << myData["esearchresult"].size() << endl;
+        cout << myRequestData.getRawString(true) << endl;
+        cout << "esearchresult size= " << myRequestData["esearchresult"].size() << endl;
 
     }
     else {

@@ -61,16 +61,6 @@ public:
 
 private:
 	
-/*
-    Date Completed (DCOM)
-    Date Created (DA)
-    Date Last Revised (LR)
-    Date of Electronic Publication (DEP)
-    Date of Publication (DP)
-    Entrez Date (EDAT)
-    MeSH Date (MHDA)
-*/
-    
     //String for requests
 
     string request;
@@ -106,7 +96,11 @@ private:
     bool bHitRequest;
     bool parsingSuccessful;
 
-    ofxJSONElement myData;
+	string retMode;
+    ofxJSONElement myRequestData;
+	
+	string retAbstrack;
+	 ofxJSONElement myData;
 };
 
 ////////////////////////////////////////////////////////////////
