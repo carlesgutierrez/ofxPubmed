@@ -11,6 +11,11 @@
 //--------------------------------------------------------------
 xmlAbstract::xmlAbstract(){
 	counterSavedXmls = 0;
+	vPmids.reserve(20);
+	vTitles.reserve(20);
+	vAbstractTexts.reserve(20);
+	vAuthors.reserve(20);
+	vPublicationTypes.reserve(20);
 }
 //--------------------------------------------------------------
 xmlAbstract::~xmlAbstract(){
@@ -19,7 +24,7 @@ xmlAbstract::~xmlAbstract(){
 
 //--------------------------------------------------------------
 void xmlAbstract::setup(){
-	counterSavedXmls = 0;
+
 }
 
 //--------------------------------------------------------------
@@ -36,15 +41,22 @@ void xmlAbstract::unRegisterURL(){
 void xmlAbstract::update(){}
 
 //--------------------------------------------------------------
-void xmlAbstract::draw(){
+void xmlAbstract::draw(int x, int y){
 	
-	//Get number of Ids
+	int namelegnth = 130;
+	int incrementline = 24; //TEXTLINEHEIGHT 24
+	int accumtext = 0;
+	
+	for(int i=0; i< numIds; i++){
+		ofDrawBitmapString("Abstracts["+ ofToString(i,0)+ "]", x, y+accumtext);
+		ofDrawBitmapString(vAbstractTexts[i], x + namelegnth, y+accumtext);
+		accumtext += incrementline;
+	}
+	
 	
 	//Move fordware reward from ids results
 	
 	//settings.pushTag("positions");
-	
-	//int numberOfSavedPoints = settings.getNumTags("position");
 	
 	//Get string text in FTGL
 	
@@ -62,10 +74,10 @@ void xmlAbstract::saveXml(){
 
 //--------------------------------------------------------------
 int xmlAbstract::loadAbstracts(string request){
+		
+	myxml.clear(); // Clear results
 	
-	myxml.clear();
-	
-	ofRegisterURLNotification(this);
+	ofRegisterURLNotification(this); // init URL callbacks
 	
 	ofLogVerbose("xmlAbstract") << "request for loadAbstracts= " << request << endl;
 	ofLoadURLAsync(request, "async_req");
@@ -74,11 +86,65 @@ int xmlAbstract::loadAbstracts(string request){
 }
 
 //--------------------------------------------------------------
+int xmlAbstract::getNumAbstractsAvaible(ofxXmlSettings myxml){
+	return numIds;
+}
+
+//--------------------------------------------------------------
+void xmlAbstract::getInfoAbstracts(ofxXmlSettings myxml){
+	
+	//reset last values
+	vTitles.clear();
+	vAbstractTexts.clear();
+	vPmids.clear();
+	vAuthors.clear();
+	vPublicationTypes.clear();
+	
+	
+	myxml.pushTag("PubmedArticleSet"); //1
+	  
+	numIds = myxml.getNumTags("PubmedArticle"); //save numIds (num of articles) founds
+	
+	for(int i = 0; i < numIds; i++){
+		
+		myxml.pushTag("PubmedArticle", i); //2
+		myxml.pushTag("MedlineCitation"); //3
+		
+		//myxml.pushTag("Article PubModel=\"Print-Electronic\"");
+		myxml.pushTag("Article"); //4
+						
+		//Title
+			string sArticleTitle = myxml.getValue("ArticleTitle", "default");
+			vTitles.push_back(sArticleTitle);
+			
+			//Authors
+		
+		//AbstractText
+		myxml.pushTag("Abstract"); //5
+		string sArticleAbstrack = myxml.getValue("AbstractText", "default");
+		vAbstractTexts.push_back(sArticleAbstrack);
+		
+		myxml.popTag();//5
+		myxml.popTag();//4
+		myxml.popTag();//3
+		myxml.popTag();//2
+		
+	}
+	
+	myxml.popTag();//1
+	
+	ofLogVerbose("xmlAbstract= ") << numIds << endl;
+
+}
+
+//--------------------------------------------------------------
 void xmlAbstract::urlResponse(ofHttpResponse & response) {
     if (response.status==200 && response.request.name == "async_req") {
         myxml.loadFromBuffer(response.data.getBinaryBuffer());
         bLoading = false;
 		saveXml();//save results with an active counter file0, file1, file2...
+		
+		getInfoAbstracts(myxml);
 
     } else {
 		ofLogVerbose("xmlAbstract") << "load my xmlAbstracts" << endl;

@@ -91,9 +91,9 @@ void ofxPubMed::draw(){
 	int accumPos = 100;
 	
     ofSetColor(0, 0, 0);
-    ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
-    ofDrawBitmapString("The actual request is = ", x, bottomRequest-TEXTLINEHEIGHT);
-    ofDrawBitmapString(myGuiPubMed.newEvent.query, x, bottomRequest);
+    //ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
+    ofDrawBitmapString("Request = ", x, bottomRequest);
+    ofDrawBitmapString(myGuiPubMed.newEvent.query, x + 80, bottomRequest);
     
     //Results json
    
@@ -158,6 +158,9 @@ void ofxPubMed::draw(){
     }
     
     if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
+	
+	//Draw Download Xml resutls
+	myAbstracts.draw(rightArea + textwidth, y);
 
 }
 
