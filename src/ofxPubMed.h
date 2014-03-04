@@ -13,6 +13,7 @@
 #include "ofxJSONElement.h"
 #include "guiPubMedEvent.h"
 #include "guiPubMed.h"
+#include "xmlAbstract.h"
 
 
 //#define MAXITEMS 35
@@ -33,6 +34,7 @@ public:
     void keyPressed(int key);
     
     void applyRequest();
+	void applyRequestAbstrack(ofxJSONElement jsondata);
     
     
     //Search ID Functions
@@ -100,7 +102,10 @@ private:
     ofxJSONElement myRequestData;
 	
 	string retAbstrack;
-	 ofxJSONElement myData;
+	ofxJSONElement myAbstrackData;
+	vector<string> myPubIDs;
+	
+	xmlAbstract myAbstracts;
 };
 
 ////////////////////////////////////////////////////////////////

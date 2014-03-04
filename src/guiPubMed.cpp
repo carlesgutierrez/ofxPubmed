@@ -176,6 +176,7 @@ void guiPubMed::sendRequest()
 	ofNotifyEvent(guiPubMedEvent::onUpdateSearch, newEvent);
 	
 }
+
 //--------------------------------------------------------------
 void guiPubMed::updateRequest()
 {	
@@ -185,17 +186,19 @@ void guiPubMed::updateRequest()
 	string text;
 		
 	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
-	//TODO Check if textInputs are empty
-	//TODO Then move searchBars where to start search
+
+	//TODO Check empty textInputs
+	//TODO then searchBars where should start to build request phrase
 	
-	//Open brakets
+	//Set all open brakets
 	string openBraket = "(";
 	for (int i = 0; i <= searchBars-2; i++) newEvent.query += openBraket;
 	
+	//Add inputtext + searchType + ) + ADN/OR/NOT
 	for (int i = 0 ; i <= searchBars; i++){
-		//event to set Request ready to start
-		conjuctiontype = conjuctiontypeString[i]; // +AND+
-		reftype = reftypeString[i]; // "[Title]"
+		
+		conjuctiontype = conjuctiontypeString[i];
+		reftype = reftypeString[i];
 		text =  textString[i];
 		
 		string closeBraket = "";
@@ -220,8 +223,6 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	if (ofIsStringInString(name, "_")){
 		vector<string> splitted	= ofSplitString(name, "_");
 		currentSearchBar = ofToInt(splitted[1]);
-//			cout << "searchBars = "<< searchBars << endl;
-//			cout << "currentS = "<< currentSearchBar << endl;
 	}
     
 	
@@ -229,7 +230,7 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	if(name == "Search"){
 		if(e.widget->getState() == OFX_UI_STATE_OVER)
 		{
-			ofLogVerbose("guiPubMed")<< "Do the sarch.";
+			ofLogVerbose("guiPubMed")<< "Search Button: Start";
 			sendRequest();
 		}
     }
@@ -241,13 +242,16 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 		
 		if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
 		{
-			textString[currentSearchBar]	=	t->getTextString(); //ofLogVerbose("guiPubMed")<< "ON ENTER:";
+			textString[currentSearchBar]	=	t->getTextString();
+			//ofLogVerbose("guiPubMed")<< "ON ENTER:";
 		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
 		{
-//			t->setTextString("");									//ofLogVerbose("guiPubMed")<< "ON FOCUS:";
+			//t->setTextString("");
+			//ofLogVerbose("guiPubMed")<< "ON FOCUS:";
 		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
 		{
-			textString[currentSearchBar]	=	t->getTextString();	//ofLogVerbose("guiPubMed")<< "ON BLUR:";
+			textString[currentSearchBar]	=	t->getTextString();
+			//ofLogVerbose("guiPubMed")<< "ON BLUR:";
 		}
 	}
 	

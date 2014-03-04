@@ -70,3 +70,7 @@ Desktop.ini
 
 #Android
 .csettings
+
+#ignore
+bin/data/*.xml
+

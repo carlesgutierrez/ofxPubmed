@@ -45,7 +45,7 @@ private:
     string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
     vector<string> myRequestDataSelItems;
 		
-	string andOrNotRequestedArray [MAXadd] = {"+And+", "+Or+", "+Not+", "-"}; 
+	string andOrNotRequestedArray [MAXadd] = {"+AND+", "+OR+", "+NOT+", "-"}; 
 	vector<string> andOrNotRequest;
 	
 	/////////

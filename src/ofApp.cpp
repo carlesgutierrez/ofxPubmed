@@ -4,6 +4,8 @@
 void ofApp::setup(){
 	ofLog(OF_LOG_VERBOSE, "guiPubMed");
 	ofSetLogLevel("guiPubMed", OF_LOG_VERBOSE); //check COUTS from Collisions
+	//ofLog(OF_LOG_VERBOSE, "xmlAbstract");
+	//ofSetLogLevel("xmlAbstract", OF_LOG_VERBOSE);
 }
 
 
@@ -35,6 +37,10 @@ void ofApp::keyPressed(int key){
 	else if(key == OF_KEY_F3){
 		ofLog(OF_LOG_VERBOSE, "guiPubMed");
 		ofSetLogLevel("guiPubMed", OF_LOG_VERBOSE);
+	}
+	else if(key == OF_KEY_F4){
+		ofLog(OF_LOG_VERBOSE, "PubMed");
+		ofSetLogLevel("PubMed", OF_LOG_VERBOSE);
 	}
 }
 

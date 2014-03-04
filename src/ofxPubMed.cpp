@@ -52,12 +52,14 @@ ofxPubMed::ofxPubMed(){
     
     //json
 	retMode = "&retmode=json";
-	retAbstrack = "&rettype=abstract";
     myRequestData.clear();
-	//myAbstrData
+
+	retAbstrack = "&rettype=abstract";
+	myAbstrackData.clear();
 	
 	//event
 	ofAddListener(guiPubMedEvent::onUpdateSearch, this, &ofxPubMed::listenerAddTextSearchBar);
+
 	
 }
 //--------------------------------------------------------------
@@ -101,6 +103,7 @@ void ofxPubMed::draw(){
     if(myRequestData["esearchresult"]["idlist"].size()<1)
     ofDrawBitmapString("No items founds", rightArea, y);
     
+	//PubMed IDs found
     for(int i=0; i< myRequestData["esearchresult"]["idlist"].size(); i++)
 	{
 		std::string text  = myRequestData["esearchresult"]["idlist"][i].asString();
@@ -219,13 +222,48 @@ void ofxPubMed::applyRequest() {
     parsingSuccessful = myRequestData.open(request+retMode);
     
     if (parsingSuccessful) {
-        cout << myRequestData.getRawString(true) << endl;
-        cout << "esearchresult size= " << myRequestData["esearchresult"].size() << endl;
+        ofLogVerbose("guiPubMed") << cout << myRequestData.getRawString(true) << endl;
+        ofLogVerbose("guiPubMed") << cout << "Num Pubmed Results= " << myRequestData["esearchresult"]["idlist"].size() << endl;
+		
+		if(myRequestData["esearchresult"]["idlist"].size() > 0)applyRequestAbstrack(myRequestData);
 
     }
     else {
         cout  << "Failed to parse JSON" << endl;
     }        
+}
+
+//--------------------------------------------------------------
+void ofxPubMed::applyRequestAbstrack(ofxJSONElement jsRequested) {
+
+	string fetchstring = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed";
+    string abstrackjson = "&rettype=abstract&retmode=xml";
+	
+	myPubIDs.clear();
+	
+	//Search pubmed ids
+	for(int i=0; i< jsRequested["esearchresult"]["idlist"].size(); i++){
+		std::string idpubmed  = jsRequested["esearchresult"]["idlist"][i].asString();
+		myPubIDs.push_back(idpubmed);
+	}
+	
+	//build request string
+	string requestAbstracts = fetchstring + "&id=";
+	if(myPubIDs.size()>0)requestAbstracts += myPubIDs[0];
+	for (int i=1; i<myPubIDs.size(); i++) {
+		requestAbstracts += ","+myPubIDs[i];
+	}
+	
+	ofLogVerbose("guiPubMed") << "requestAbstracts= " << requestAbstracts << endl;
+	
+	if(myPubIDs.size()>0){
+		
+		// Now set and parse the results //TODO JSON not allowed // XML by default and textmode is return is json is requested
+		int idrequest = myAbstracts.loadAbstracts(requestAbstracts + abstrackjson);
+			
+		ofLogVerbose("xmlAbstract") << cout << "xmlAbstract parsingSuccessful idrequest = " << idrequest << endl;
+	}
+		
 }
 
 //--------------------------------------------------------------
