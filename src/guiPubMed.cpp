@@ -224,6 +224,7 @@ bool guiPubMed::changeSearchFieldToData(int _currentSearchBar)
 		ofxUITextInput *t = (ofxUITextInput *)gui->getWidget("textFieldDataFrom_"+ofToString(i));
 		t->setAutoClear(false);
 		t->setTextString("YYYY/MM/DD");
+		t->setOnlyDataInput(true);
 
 		
 		gui->addWidgetEastOf(new ofxUITextInput("textFieldDataTo_"+ofToString(i),
@@ -237,7 +238,7 @@ bool guiPubMed::changeSearchFieldToData(int _currentSearchBar)
 		t = (ofxUITextInput *)gui->getWidget("textFieldDataTo_"+ofToString(i));
 		t->setAutoClear(false);
 		t->setTextString("YYYY/MM/DD");
-		
+		t->setOnlyDataInput(true);
 		
 		//TODO: How to avoid problmes with searchBars counter... well if we replace that ID then it's not necesary to remove others.
 		//Solucion add too text inuts with same i. TextDataInit, TextDataEnd.
