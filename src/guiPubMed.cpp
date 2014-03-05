@@ -11,7 +11,7 @@ guiPubMed::guiPubMed()
 	//Request
 	//The same tags but with not spaces admited for html requests
     myRequestSelItems.assign(myRequestSelItemsArray, myRequestSelItemsArray+MAXITEMS);
-    myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
+    //myRequestDataSelItems.assign(myRequestDataSelItemsArray, myRequestDataSelItemsArray+MAXITEMSDATAS);
 	andOrNotRequest.assign(andOrNotRequestedArray, andOrNotRequestedArray+MAXadd);
 	
 	
@@ -44,6 +44,12 @@ guiPubMed::guiPubMed()
 	searchFieldY	= 0;
 	searchFieldW	= 320;
 	searchFieldH	= 0;
+	
+	// Search field Datas Canvas
+	searchFieldDataX = dropDownW + OFX_UI_GLOBAL_WIDGET_SPACING*2 + OFX_UI_GLOBAL_PADDING;
+	searchFieldDataY = OFX_UI_GLOBAL_WIDGET_SPACING;
+	searchFieldDataW = searchFieldW *.5 - OFX_UI_GLOBAL_WIDGET_SPACING*.75;
+	searchFieldDataH = OFX_UI_GLOBAL_SLIDER_WIDTH;
 	
 	// add buuton
 	addButtonX		=	dropDownW + searchCanvasW;
@@ -85,7 +91,7 @@ void guiPubMed::update()
 	
 	if(bRemoveSearchField)
 	{
-        removeSearchField();
+        removeLastSearchField();
         bRemoveSearchField = false;
     }
 }
@@ -107,6 +113,49 @@ void guiPubMed::setupPubMedGUI()
 													searchbuttonX,
 													searchbuttonY);
 	gui -> addWidget(search	);
+}
+
+//--------------------------------------------------------------
+void guiPubMed::addDataSearchField()
+{
+	searchBars++;
+	int i = searchBars;
+	
+	// Dropdown list
+	ofxUIDropDownList* w = gui->addDropDownList("dropDown_"+ofToString(i),
+												myVisibleSelItems,
+												dropDownW,
+												dropDownX,
+												dropDownY);
+	w->setAllowMultiple(false);
+	w->setAutoClose(true);
+	w->setShowCurrentSelected(true);
+	w->setLabelText("Select");
+	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
+	
+	// Text Input
+	textString.push_back("type here");
+	ofxUITextInput *t =	gui->addTextInput("textField_"+ofToString(i),
+										  textString[i],
+										  searchFieldW,
+										  searchFieldH,
+										  searchFieldX,
+										  searchFieldY);
+	t->setAutoClear(false);
+	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
+	
+	// Add button
+	ofxUIDropDownList *add = gui->addDropDownList("addButton_"+ofToString(i),
+												  andOrNot,
+												  addButtonW,
+												  addButtonX,
+												  addButtonY);
+	add->setAllowMultiple(false);
+	add->setAutoClose(true);
+	add->setShowCurrentSelected(true);
+	add->setLabelText("-");
+	if(searchBars == 1)	add->setLabelText("And");
+	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 }
 
 //--------------------------------------------------------------
@@ -153,7 +202,57 @@ void guiPubMed::addSearchField()
 }
 
 //--------------------------------------------------------------
-void guiPubMed::removeSearchField()
+bool guiPubMed::changeSearchFieldToData(int _currentSearchBar)
+{
+	bool bremoved = false;
+	// Remove last search Bar
+	int i = _currentSearchBar;
+	
+	if(i>0){
+		//remove textinput
+		gui->removeWidget("textField_"+ofToString(i));
+		
+		//add text datas
+		gui->addWidgetEastOf(new ofxUITextInput("textFieldDataFrom_"+ofToString(i),
+												textString[i],
+												searchFieldDataW,
+												0,
+												0,
+												0,
+												OFX_UI_FONT_MEDIUM),"dropDown_"+ofToString(i));
+
+		ofxUITextInput *t = (ofxUITextInput *)gui->getWidget("textFieldDataFrom_"+ofToString(i));
+		t->setAutoClear(false);
+		t->setTextString("YYYY/MM/DD");
+
+		
+		gui->addWidgetEastOf(new ofxUITextInput("textFieldDataTo_"+ofToString(i),
+												textString[i],
+												searchFieldDataW,
+												0,
+												0,
+												0,
+												OFX_UI_FONT_MEDIUM), "textFieldDataFrom_"+ofToString(i));
+	
+		t = (ofxUITextInput *)gui->getWidget("textFieldDataTo_"+ofToString(i));
+		t->setAutoClear(false);
+		t->setTextString("YYYY/MM/DD");
+		
+		
+		//TODO: How to avoid problmes with searchBars counter... well if we replace that ID then it's not necesary to remove others.
+		//Solucion add too text inuts with same i. TextDataInit, TextDataEnd.
+		
+		// Set the last label on "-"
+		//ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i-1));
+		//add->setLabelText("-");
+		bremoved = true;
+	}
+	
+	return bremoved;
+}
+
+//--------------------------------------------------------------
+void guiPubMed::removeLastSearchField()
 {
 	// Remove last search Bar
 	int i = searchBars;
@@ -239,22 +338,22 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 	{
 		ofxUITextInput *t = (ofxUITextInput *) e.widget;
 		ofLogVerbose("guiPubMed") << "TextInput current text: " << t->getTextString();
-		
-		if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
+		ofLogVerbose("guiPubMed") << "getTriggerType " << t->getTriggerType() << endl;
+		if(t->getInputTriggerType() ==  OFX_UI_TEXTINPUT_ON_ENTER)
 		{
 			textString[currentSearchBar]	=	t->getTextString();
-			//ofLogVerbose("guiPubMed")<< "ON ENTER:";
-		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
+			ofLogVerbose("guiPubMed")<< "ON ENTER:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
 		{
 			//t->setTextString("");
-			//ofLogVerbose("guiPubMed")<< "ON FOCUS:";
-		}else if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+			ofLogVerbose("guiPubMed")<< "ON FOCUS:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
 		{
 			textString[currentSearchBar]	=	t->getTextString();
-			//ofLogVerbose("guiPubMed")<< "ON BLUR:";
+			ofLogVerbose("guiPubMed")<< "ON BLUR:";
 		}
 	}
-	
+
 	//---------------------------------------------
 	else if(name == "And")
 	{
@@ -295,11 +394,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 //			cout <<"Toggle name ="<< t->getName()<< endl;
 		}
 	}
-	
-	//---------------------------------------------
 	else
-	{
-		//return myRequestSelItems from my myVisibleSelItems
+	{	//DROPDOWN MENU
 		int myit = 0;
 		for(vector<string>::iterator it = myVisibleSelItems.begin(); it != myVisibleSelItems.end(); ++it)
 		{
@@ -307,7 +403,26 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			{
 				ofLogVerbose("guiPubMed")<< "Dropdown_"<< currentSearchBar <<" "<< (*it);
 				reftypeString[currentSearchBar]= myRequestSelItems[myit];
-//				ofLogVerbose("guiPubMed")<< "reftypeString[currentSearchBar]= "<< reftypeString[currentSearchBar];
+				
+				//if date type, Set diferent text input
+				for(int i = 0; i<myVisibleDatasSelItems.size();i++ ){
+					if(name.compare(myVisibleDatasSelItems[i]) == 0){
+						ofLogVerbose("guiPubMed")<< "Set different textinput" << endl;
+						
+						//remove lineSearchBar  currentSearchBar
+						bool removedgui = changeSearchFieldToData(currentSearchBar); // not tried yet
+						//ofLogVerbose("guiPubMed")<< "Removed?" <<  removedgui << endl;
+
+						//add Data search bar
+						//...
+					}
+				}
+					
+				//if(name == "Date - Completion" || name == "Date - Create" || name == "Date - Entrez" || name == "Date - MeSH" || name == "Date - Modification" || name = "Date - Publication"){
+				//	ofLogVerbose("guiPubMed")<< "Set different textinpu" << endl;
+				//}
+					
+				
 			}
 			myit++;
 		}

@@ -93,7 +93,7 @@ void ofxPubMed::draw(){
     ofSetColor(0, 0, 0);
     //ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
     ofDrawBitmapString("Request = ", x, bottomRequest);
-    ofDrawBitmapString(myGuiPubMed.newEvent.query, x + 80, bottomRequest);
+    ofDrawBitmapString(request, x + 80, bottomRequest); //myGuiPubMed.newEvent.query
     
     //Results json
    
@@ -307,6 +307,8 @@ void ofxPubMed::addTagRequest(string query){
     cout << "Add TAG Request, now request is= " << request << endl;
 }
 
+
+///////// old direct methods /////////////
 //--------------------------------------------------------------
 void ofxPubMed::addANDSimpleTagRequest(string newitem, string addtype){
     request += sAnd + setformatForSearch(newitem) + addtype;
@@ -347,6 +349,7 @@ void ofxPubMed::addRelDateRequest(string reldate, string days){
 void ofxPubMed::addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax){
     request += datemin + typedatemin + datemax + typedatemax;
 }
+///////////////////////
 
 //listener from gui
 //--------------------------------------------------------------

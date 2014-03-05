@@ -6,7 +6,7 @@
 #include "guiPubMedEvent.h"
 
 
-#define MAXITEMS 34
+#define MAXITEMS 40
 #define MAXITEMSDATAS 6
 #define MAXadd 4
 #define MAXSEARCHBARS 10
@@ -30,7 +30,7 @@ private:
 	
 	/////////
 	//USED IN APP (Visible)
-    string myVisibleSelItemsArray [MAXITEMS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
+    string myVisibleSelItemsArray [MAXITEMS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
     vector<string> myVisibleSelItems;
     string myVisibleDatasSelItemsArray [MAXITEMSDATAS] = {"Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication"};
     vector<string> myVisibleDatasSelItems;
@@ -39,11 +39,11 @@ private:
 	/////////
 	//TO SEND TO HTTP (Request)
 	//USED IN REQUEST
-    string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
     vector<string> myRequestSelItems;
     
-    string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]",};
-    vector<string> myRequestDataSelItems;
+   // string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]"};
+   // vector<string> myRequestDataSelItems;
 		
 	string andOrNotRequestedArray [MAXadd] = {"+AND+", "+OR+", "+NOT+", "-"}; 
 	vector<string> andOrNotRequest;
@@ -61,8 +61,10 @@ private:
     ofxUICanvas *gui;
 	void setupPubMedGUI();
     void addSearchField();
+	void addDataSearchField();
 	void setupPubMedGuiDatas();
-	void removeSearchField();
+	bool changeSearchFieldToData(int i);
+	void removeLastSearchField();
     void guiEvent(ofxUIEventArgs &e);
 
 	int currentSearchBar;
@@ -91,6 +93,12 @@ private:
 	float searchCanvasY;
 	float searchCanvasW;
 	float searchCanvasH;
+	
+	// searchCanvasData
+	float searchFieldDataX;
+	float searchFieldDataY;
+	float searchFieldDataW;
+	float searchFieldDataH;
 	
 	// postCanvas
 	float dropDownX;
