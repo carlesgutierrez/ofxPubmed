@@ -278,6 +278,8 @@ void ofxPubMed::resetBase(){
 //--------------------------------------------------------------
 void ofxPubMed::reseteSearch(){
 	resetBase();
+	myAbstracts.resetInfo();
+	
     request += sBasicSearching + sDatabase + sTerm;
 }
 

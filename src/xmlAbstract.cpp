@@ -91,15 +91,20 @@ int xmlAbstract::getNumAbstractsAvaible(ofxXmlSettings myxml){
 }
 
 //--------------------------------------------------------------
-void xmlAbstract::getInfoAbstracts(ofxXmlSettings myxml){
-	
-	//reset last values
+void xmlAbstract::resetInfo(){
+	numIds = 0;
 	vTitles.clear();
 	vAbstractTexts.clear();
 	vPmids.clear();
 	vAuthors.clear();
 	vPublicationTypes.clear();
+}
+
+//--------------------------------------------------------------
+void xmlAbstract::getInfoAbstracts(ofxXmlSettings myxml){
 	
+	//reset last values
+	resetInfo();
 	
 	myxml.pushTag("PubmedArticleSet"); //1
 	  

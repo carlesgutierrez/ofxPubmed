@@ -21,9 +21,10 @@ public:
 	void setup();
 	void update();
 	void draw(int x, int y);
-	
 	void registerURL();
 	void unRegisterURL();
+	
+	void resetInfo();
 
 	void saveXml();
 	//ofxXmlSettings* getXml();

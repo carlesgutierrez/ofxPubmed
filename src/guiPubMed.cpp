@@ -239,11 +239,6 @@ bool guiPubMed::changeDataToSearchField(int _currentSearchBar){
 		ofxUITextInput *t = (ofxUITextInput *)gui->getWidget("textField_"+ofToString(i));
 		t->setAutoClear(false);
 		
-		
-		// Set the last label on "-"
-		//ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i-1));
-		//add->setLabelText("-");
-		
 		bchangedtoTextField = true;
 	}
 	
@@ -475,8 +470,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 							
 						//If searchfield is Active change to data
 						ofLogVerbose("guiPubMed") << "Change textinput to Data Inputs i=" << i << endl;
-						changeSearchFieldToData(currentSearchBar);
-						myVisibleDatasSelItemsSelected[currentSearchBar] = true;
+						bool changedone = changeSearchFieldToData(currentSearchBar);
+						if(changedone)myVisibleDatasSelItemsSelected[currentSearchBar] = true;
 						bFoundDataType = true;
 						idFound = i;
 					}
@@ -487,8 +482,8 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 					for(int i = 0; i< myVisibleSelItems.size();i++){
 						//Check if == and That was Datatype
 						if(name.compare(myVisibleSelItems[i]) == 0 && myVisibleDatasSelItemsSelected[currentSearchBar]){
-							changeDataToSearchField(currentSearchBar);
-							myVisibleDatasSelItemsSelected[currentSearchBar] = false;
+							bool changedone = changeDataToSearchField(currentSearchBar);
+							if(changedone)myVisibleDatasSelItemsSelected[currentSearchBar] = false;
 							ofLogVerbose("guiPubMed") << "Change Data Inputs to textinput id=" << i << endl;
 						}
 					}
