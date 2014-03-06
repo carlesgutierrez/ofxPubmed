@@ -32,6 +32,10 @@ private:
 	//USED IN APP (Visible)
     string myVisibleSelItemsArray [MAXITEMS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
     vector<string> myVisibleSelItems;
+	
+	string myVisibleSelItemsArrayWithoutDatas[MAXITEMS-MAXITEMSDATAS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
+    vector<string> myVisibleSelItemsWithoutDatas;
+	
     string myVisibleDatasSelItemsArray [MAXITEMSDATAS] = {"Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication"};
     vector<string> myVisibleDatasSelItems;
 	string andOrNotArray [MAXadd] = {"And", "Or", "Not", "-"};
@@ -64,8 +68,13 @@ private:
 	void addDataSearchField();
 	void setupPubMedGuiDatas();
 	bool changeSearchFieldToData(int i);
+	bool changeDataToSearchField(int i);
 	void removeLastSearchField();
     void guiEvent(ofxUIEventArgs &e);
+	
+	//utils for this GUI
+	vector<bool>	myVisibleDatasSelItemsSelected;
+	string getPresentData();
 
 	int currentSearchBar;
 	int searchBars;
