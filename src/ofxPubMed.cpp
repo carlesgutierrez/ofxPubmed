@@ -171,7 +171,7 @@ void ofxPubMed::keyPressed(int key){
 	
     //Direct Request for Test and apply with RETURN
     if(key == '1'){
-        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&datetype=edat&mindate=2011&maxdate=2012";
+        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&datetype=edat&mindate=1991/02/21&maxdate=2013/02/21";
     }
     else if(key == '2'){
         request = "http://www.ncbi.nlm.nih.gov/pubmed&term=aspirine&mindate=1991/02/21[pDate]&maxdate=2013/02/21[pDate]";
@@ -201,6 +201,8 @@ void ofxPubMed::keyPressed(int key){
     else if(key == '9'){
         addDataTagRequest("1991","2014", "[All%20Fields]");
     }
+	
+	if(key == 'R')applyRequest();
     
     //General Request is under construction
     bHitRequest = false;
@@ -280,7 +282,7 @@ void ofxPubMed::reseteSearch(){
 	resetBase();
 	myAbstracts.resetInfo();
 	
-    request += sBasicSearching + sDatabase + sTerm;
+    request += sBasicSearching + sDatabase; //+ sTerm
 }
 
 //--------------------------------------------------------------

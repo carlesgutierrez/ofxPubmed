@@ -43,7 +43,7 @@ private:
 	/////////
 	//TO SEND TO HTTP (Request)
 	//USED IN REQUEST
-    string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
+    string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "DCOM", "DA", "EDAT","MHDA", "[Date%20-%20Modification]", "DP", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
     vector<string> myRequestSelItems;
     
    // string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]"};
@@ -58,6 +58,14 @@ private:
 	vector<string>	textString;
 	vector<string>	reftypeString;
 	vector<string>	conjuctiontypeString;
+	
+	vector<bool>	myDataTypeSelected;
+	bool isDateTypeSelected(string name);
+	
+	vector<string>  reftypeData;
+	vector<string>	fromDateString;
+	vector<string>	toDateString;
+	
 	void updateRequest();
 	void sendRequest();
 
@@ -65,7 +73,6 @@ private:
     ofxUICanvas *gui;
 	void setupPubMedGUI();
     void addSearchField();
-	void addDataSearchField();
 	void setupPubMedGuiDatas();
 	bool changeSearchFieldToData(int i);
 	bool changeDataToSearchField(int i);
@@ -73,7 +80,6 @@ private:
     void guiEvent(ofxUIEventArgs &e);
 	
 	//utils for this GUI
-	vector<bool>	myVisibleDatasSelItemsSelected;
 	string getPresentData();
 
 	int currentSearchBar;

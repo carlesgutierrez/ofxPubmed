@@ -17,7 +17,7 @@ guiPubMed::guiPubMed()
 	
 	//Set false my vector of recognixe if actual data inside selected items is DataSeachBar or TextField
 	for (int i=0; i< MAXSEARCHBARS; i++) {
-		myVisibleDatasSelItemsSelected.push_back(false);
+		myDataTypeSelected.push_back(false);
 	}
 	
 	currentSearchBar= -1;
@@ -63,6 +63,8 @@ guiPubMed::guiPubMed()
 	
 	//Texts to send //resize to use them as array
 	textString.resize(MAXSEARCHBARS);
+	fromDateString.resize(MAXSEARCHBARS);
+	toDateString.resize(MAXSEARCHBARS);
 	reftypeString.resize(MAXSEARCHBARS);
 	conjuctiontypeString.resize(MAXSEARCHBARS);
 	andOrNotRequest.resize(MAXSEARCHBARS);
@@ -121,51 +123,6 @@ void guiPubMed::setupPubMedGUI()
 }
 
 //--------------------------------------------------------------
-void guiPubMed::addDataSearchField()
-{
-	searchBars++;
-	int i = searchBars;
-	
-	// Dropdown list
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
-	//gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_LEFT);
-	ofxUIDropDownList* w = gui->addDropDownList("dropDown_"+ofToString(i),
-												myVisibleSelItems,
-												dropDownW,
-												dropDownX,
-												dropDownY);
-	w->setAllowMultiple(false);
-	w->setAutoClose(true);
-	w->setShowCurrentSelected(true);
-	w->setLabelText("Select");
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
-	// Text Input
-	//textString.push_back("type here");
-	ofxUITextInput *t =	gui->addTextInput("textField_"+ofToString(i),
-										  "type here",
-										  searchFieldW,
-										  searchFieldH,
-										  searchFieldX,
-										  searchFieldY);
-	t->setAutoClear(false);
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
-	// Add button
-	ofxUIDropDownList *add = gui->addDropDownList("addButton_"+ofToString(i),
-												  andOrNot,
-												  addButtonW,
-												  addButtonX,
-												  addButtonY);
-	add->setAllowMultiple(false);
-	add->setAutoClose(true);
-	add->setShowCurrentSelected(true);
-	add->setLabelText("-");
-	if(searchBars == 1)	add->setLabelText("And");
-	
-}
-
-//--------------------------------------------------------------
 void guiPubMed::addSearchField()
 {
 	searchBars++;
@@ -218,7 +175,7 @@ bool guiPubMed::changeDataToSearchField(int _currentSearchBar){
 	// Remove last search Bar
 	int i = _currentSearchBar;
 	
-	if(i>0){
+	if(i>-1){
 		//remove Data textinputs
 		gui->removeWidget("textFieldDataFrom_"+ofToString(i));
 		gui->removeWidget("textFieldDataTo_"+ofToString(i));
@@ -253,7 +210,7 @@ bool guiPubMed::changeSearchFieldToData(int _currentSearchBar)
 	// Remove last search Bar
 	int i = _currentSearchBar;
 	
-	if(i>0){
+	if(i>-1){
 		//remove textinput
 		gui->removeWidget("textField_"+ofToString(i));
 		
@@ -335,37 +292,87 @@ void guiPubMed::sendRequest()
 
 //--------------------------------------------------------------
 void guiPubMed::updateRequest()
-{	
+{
+	//My event to send
 	newEvent.query="";
+	//TextFields types
 	string conjuctiontype;
 	string reftype;
 	string text;
+	//Data types
+	string datafrom;
+	string dataTo;
+	string datetype = "&datetype=";
+	string sMindate = "&mindate=";
+	string sMaxdate = "&maxdate=";
+	string sTerm = "&term=";
 		
 	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
 
 	//TODO Check empty textInputs
 	//TODO then searchBars where should start to build request phrase
 	
+	//set term questionarie //TODO anyway?
+	newEvent.query += sTerm;
+	
 	//Set all open brakets
 	string openBraket = "(";
 	for (int i = 0; i <= searchBars-2; i++) newEvent.query += openBraket;
 	
+	
 	//Add inputtext + searchType + ) + ADN/OR/NOT
 	for (int i = 0 ; i <= searchBars; i++){
 		
-		conjuctiontype = conjuctiontypeString[i];
-		reftype = reftypeString[i];
-		text =  textString[i];
-		
+		//Set our vars
 		string closeBraket = "";
 		if(i!=searchBars)closeBraket = ")";
-
-		if(conjuctiontype.empty()&&i!=searchBars)conjuctiontype = "+AND+";
+		
+		//Check all params to set right search mode
+		conjuctiontype = conjuctiontypeString[i];
+		reftype = reftypeString[i];
+		
+		if((conjuctiontype.empty()&&i!=searchBars))conjuctiontype = "+AND+";
+		if(i == 0)conjuctiontype = ""; //avoid to set AND fisrt position
+		//conjuctiontype = ""; //avoid to set AND after date type..
+			
 		if(reftype.empty())reftype = "[All%20Fields]";
-		if(!text.empty())newEvent.query += text + reftype + closeBraket + conjuctiontype;
+		
+		if(!myDataTypeSelected[i]){
+			//if serachText
+			text =  textString[i];
+			//set final request to send by event
+			if(!text.empty()){
+				newEvent.query += conjuctiontype + text + reftype + closeBraket;
+				ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
+			}
+		}
+		else {
+			//else then textData related
+			datafrom = fromDateString[i];
+			dataTo = toDateString[i];
+			if(dataTo.empty())dataTo = getPresentData();
+			//set final request to send by event
+			if(!text.empty()){
+				newEvent.query += datetype + reftype + sMindate + datafrom + sMaxdate + dataTo;
+				ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
+			}
+		}
+
 	}
 	
-	ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
+	
+}
+
+//--------------------------------------------------------------
+bool guiPubMed::isDateTypeSelected(string name){
+
+	bool bFoundDataType = false;
+	
+	for(int i = 0; i<myVisibleDatasSelItems.size();i++){
+		if(name.compare(myVisibleDatasSelItems[i]) == 0) bFoundDataType = true;
+	}
+	
+	return bFoundDataType;
 }
 
 //--------------------------------------------------------------
@@ -396,18 +403,16 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 		ofxUITextInput *t = (ofxUITextInput *) e.widget;
 		ofLogVerbose("guiPubMed") << "TextInput current text: " << t->getTextString();
 		ofLogVerbose("guiPubMed") << "getTriggerType " << t->getTriggerType() << endl;
-		if(t->getInputTriggerType() ==  OFX_UI_TEXTINPUT_ON_ENTER)
-		{
+
+		if(t->getInputTriggerType() ==  OFX_UI_TEXTINPUT_ON_ENTER){
 			textString[currentSearchBar]	=	t->getTextString();
-			ofLogVerbose("guiPubMed")<< "ON ENTER:";
-		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
-		{
+			ofLogVerbose("guiPubMed")<< "ON ENTER: " << textString[currentSearchBar] << endl;
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
 			//t->setTextString("");
-			ofLogVerbose("guiPubMed")<< "ON FOCUS:";
-		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
-		{
+			ofLogVerbose("guiPubMed")<< "ON FOCUS: " << textString[currentSearchBar] << endl;
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS){
 			textString[currentSearchBar]	=	t->getTextString();
-			ofLogVerbose("guiPubMed")<< "ON BLUR:";
+			ofLogVerbose("guiPubMed")<< "ON BLUR: textinut: " << textString[currentSearchBar] << endl;
 		}
 	}
 
@@ -445,10 +450,49 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			// TODO:
 			// Set the label to the last used (instead of "-")
 			// following code does not work (of course..)
-//			ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(currentSearchBar));
-//			ofxUIToggle *t = (ofxUIToggle *) e.widget;
-//			add->setLabelText(t->getName());
-//			cout <<"Toggle name ="<< t->getName()<< endl;
+			//			ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(currentSearchBar));
+			//			ofxUIToggle *t = (ofxUIToggle *) e.widget;
+			//			add->setLabelText(t->getName());
+			//			cout <<"Toggle name ="<< t->getName()<< endl;
+		}
+	}
+	else if(name == "textFieldDataFrom_"+ofToString(currentSearchBar))
+	{
+		ofxUITextInput *t = (ofxUITextInput *) e.widget;
+		ofLogVerbose("guiPubMed") << "Date TextInput current text: " << t->getTextString();
+		ofLogVerbose("guiPubMed") << "Date getTriggerType " << t->getTriggerType() << endl;
+		if(t->getInputTriggerType() ==  OFX_UI_TEXTINPUT_ON_ENTER)
+		{
+			fromDateString[currentSearchBar] = t->getTextString();
+			ofLogVerbose("guiPubMed")<< "ON ENTER:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
+		{
+			//???
+			ofLogVerbose("guiPubMed")<< "ON FOCUS:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+		{
+			fromDateString[currentSearchBar] = t->getTextString();
+			ofLogVerbose("guiPubMed")<< "ON BLUR:";
+		}
+
+	}
+	else if(name == "textFieldDataTo_"+ofToString(currentSearchBar))
+	{
+		ofxUITextInput *t = (ofxUITextInput *) e.widget;
+		ofLogVerbose("guiPubMed") << "Date TextInput current text: " << t->getTextString();
+		ofLogVerbose("guiPubMed") << "Date getTriggerType " << t->getTriggerType() << endl;
+		if(t->getInputTriggerType() ==  OFX_UI_TEXTINPUT_ON_ENTER)
+		{
+			toDateString[currentSearchBar] = t->getTextString();
+			ofLogVerbose("guiPubMed")<< "ON ENTER:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS)
+		{
+			toDateString[currentSearchBar] = t->getTextString();
+			ofLogVerbose("guiPubMed")<< "ON FOCUS:";
+		}else if(t->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+		{
+			toDateString[currentSearchBar] = t->getTextString();
+			ofLogVerbose("guiPubMed")<< "ON BLUR:";
 		}
 	}
 	else
@@ -459,31 +503,37 @@ void guiPubMed::guiEvent(ofxUIEventArgs &e)
 			if ((*it)==name)
 			{
 				ofLogVerbose("guiPubMed")<< "Dropdown_"<< currentSearchBar <<" "<< (*it);
+				//Get type of reference
 				reftypeString[currentSearchBar]= myRequestSelItems[myit];
 				
-				//if date type, Set diferent text input
+				
+				//Swicht mode
+				/////////////////////////////////Date case
 				bool bFoundDataType = false;
 				int idFound = -1;
 				for(int i = 0; i<myVisibleDatasSelItems.size();i++){
 					//Check if == and not a already Datatype
-					if(name.compare(myVisibleDatasSelItems[i]) == 0 && !myVisibleDatasSelItemsSelected[currentSearchBar]){
+					if(name.compare(myVisibleDatasSelItems[i]) == 0 && !myDataTypeSelected[currentSearchBar]){
 							
 						//If searchfield is Active change to data
 						ofLogVerbose("guiPubMed") << "Change textinput to Data Inputs i=" << i << endl;
 						bool changedone = changeSearchFieldToData(currentSearchBar);
-						if(changedone)myVisibleDatasSelItemsSelected[currentSearchBar] = true;
+						if(changedone)myDataTypeSelected[currentSearchBar] = true;
 						bFoundDataType = true;
 						idFound = i;
 					}
+					else if(name.compare(myVisibleDatasSelItems[i]) == 0){
+						bFoundDataType = true;
+					}
 				}
-				
+				//////////////////////////////////Non Date case
 				if(!bFoundDataType){
 					//If that's normal search field type (so not found any datatype ) then return to thar format
 					for(int i = 0; i< myVisibleSelItems.size();i++){
 						//Check if == and That was Datatype
-						if(name.compare(myVisibleSelItems[i]) == 0 && myVisibleDatasSelItemsSelected[currentSearchBar]){
+						if(name.compare(myVisibleSelItems[i]) == 0 && myDataTypeSelected[currentSearchBar]){
 							bool changedone = changeDataToSearchField(currentSearchBar);
-							if(changedone)myVisibleDatasSelItemsSelected[currentSearchBar] = false;
+							if(changedone)myDataTypeSelected[currentSearchBar] = false;
 							ofLogVerbose("guiPubMed") << "Change Data Inputs to textinput id=" << i << endl;
 						}
 					}
