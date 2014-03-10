@@ -21,7 +21,7 @@ guiPubMed::guiPubMed()
 	}
 	
 	currentSearchBar= -1;
-	searchBars		= 0;
+	searchBars		= -1;
 	//	searchBarsH	= 100;
 	int lineHeight	= 35;
 	
@@ -128,43 +128,68 @@ void guiPubMed::addSearchField()
 	searchBars++;
 	int i = searchBars;
 	
-	// Dropdown list
-	//gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_LEFT);
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+	if(i < MAXSEARCHBARS -1){
+		
+		// Dropdown list
+		//gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_LEFT);
+		gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
+		
+		if(searchBars == 0){
+			ofxUIDropDownList* w = gui->addDropDownList("dropDown_"+ofToString(i),
+														myVisibleSelItems,
+														dropDownW,
+														dropDownX,
+														dropDownY);
+			
+			w->setAllowMultiple(false);
+			w->setAutoClose(true);
+			w->setShowCurrentSelected(true);
+			w->setLabelText("Select");
+		}
+		else {
+			//add text datas
+			gui->addWidgetSouthOf(new ofxUIDropDownList("dropDown_"+ofToString(i),
+														myVisibleSelItems,
+														dropDownW,
+														0,
+														0,
+														OFX_UI_FONT_MEDIUM),"dropDown_"+ofToString(i-1));
+			
+			ofxUIDropDownList *w = (ofxUIDropDownList *)gui->getWidget("dropDown_"+ofToString(i));
+			
+			w->setAllowMultiple(false);
+			w->setAutoClose(true);
+			w->setShowCurrentSelected(true);
+			w->setLabelText("Select");
+		}
+		
+		
+		gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
+		
+		// Text Input
+		//textString.push_back("type here");
+		ofxUITextInput *t =	gui->addTextInput("textField_"+ofToString(i),
+											  "type here",
+											  searchFieldW,
+											  searchFieldH,
+											  searchFieldX,
+											  searchFieldY);
+		t->setAutoClear(false);
+		gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
+		
+		// Add button
+		ofxUIDropDownList *add = gui->addDropDownList("addButton_"+ofToString(i),
+													  andOrNot,
+													  addButtonW,
+													  addButtonX,
+													  addButtonY);
+		add->setAllowMultiple(false);
+		add->setAutoClose(true);
+		add->setShowCurrentSelected(true);
+		add->setLabelText("-");
+		if(searchBars == 0)	add->setLabelText("And");
+	}
 	
-	ofxUIDropDownList* w = gui->addDropDownList("dropDown_"+ofToString(i),
-												myVisibleSelItems,
-												dropDownW,
-												dropDownX,
-												dropDownY);
-	w->setAllowMultiple(false);
-	w->setAutoClose(true);
-	w->setShowCurrentSelected(true);
-	w->setLabelText("Select");
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
-	// Text Input
-	//textString.push_back("type here");
-	ofxUITextInput *t =	gui->addTextInput("textField_"+ofToString(i),
-										  "type here",
-										  searchFieldW,
-										  searchFieldH,
-										  searchFieldX,
-										  searchFieldY);
-	t->setAutoClear(false);
-	gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_RIGHT);
-	
-	// Add button
-	ofxUIDropDownList *add = gui->addDropDownList("addButton_"+ofToString(i),
-												  andOrNot,
-												  addButtonW,
-												  addButtonX,
-												  addButtonY);
-	add->setAllowMultiple(false);
-	add->setAutoClose(true);
-	add->setShowCurrentSelected(true);
-	add->setLabelText("-");
-	if(searchBars == 1)	add->setLabelText("And");
 
 }
 
@@ -248,6 +273,8 @@ bool guiPubMed::changeSearchFieldToData(int _currentSearchBar)
 		//ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i-1));
 		//add->setLabelText("-");
 		bchangedtoData = true;
+		
+		gui->setWidgetPosition(OFX_UI_WIDGET_POSITION_DOWN);
 	}
 	
 	return bchangedtoData;
@@ -270,7 +297,7 @@ void guiPubMed::removeLastSearchField()
 {
 	// Remove last search Bar
 	int i = searchBars;
-	if(i>1){
+	if(i>0){
 		gui->removeWidget("dropDown_"+ofToString(i));
 		gui->removeWidget("textField_"+ofToString(i));
 		gui->removeWidget("addButton_"+ofToString(i));
@@ -291,78 +318,117 @@ void guiPubMed::sendRequest()
 }
 
 //--------------------------------------------------------------
+int guiPubMed::countDataFilled(){
+	int counter = 0;
+	
+	for (int i = 0 ; i <= searchBars; i++){
+		if(!myDataTypeSelected[i]){//if looking for a textField search query
+			string text =  textString[i];
+			//set final request to send by event
+			if(!text.empty())counter++;
+		}
+		else { // data type
+			string datafrom = fromDateString[i];
+			if(!datafrom.empty())counter++;
+		}
+	}
+	
+	return counter;
+}
+
+//--------------------------------------------------------------
 void guiPubMed::updateRequest()
 {
-	//My event to send
-	newEvent.query="";
-	//TextFields types
+	newEvent.query=""; //My event to fill and send
 	string conjuctiontype;
 	string reftype;
 	string text;
-	//Data types
 	string datafrom;
 	string dataTo;
 	string datetype = "&datetype=";
 	string sMindate = "&mindate=";
 	string sMaxdate = "&maxdate=";
 	string sTerm = "&term=";
+	string bwtdates = "%3A";
 		
-	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars: " << searchBars;
-
-	//TODO Check empty textInputs
-	//TODO then searchBars where should start to build request phrase
+	ofLogVerbose("guiPubMed") <<"updateRequest num searchBars from [0..X] = " << searchBars << endl;
 	
-	//set term questionarie //TODO anyway?
-	newEvent.query += sTerm;
+	int searchBarsFilled = countDataFilled() -1;//Array format
+	ofLogVerbose("guiPubMed") <<"searchBarsFilled from [0..X] = " << searchBarsFilled << endl;
+		
+	//TODO Future request should select type of query to use other eSearch funcionalities
+	newEvent.query += sTerm;//set term questionarie
 	
-	//Set all open brakets
+	//Set all open brakets for each searchBarsFilled
 	string openBraket = "(";
-	for (int i = 0; i <= searchBars-2; i++) newEvent.query += openBraket;
-	
+	for (int i = 0; i <= searchBarsFilled; i++) newEvent.query += openBraket;
 	
 	//Add inputtext + searchType + ) + ADN/OR/NOT
 	for (int i = 0 ; i <= searchBars; i++){
 		
-		//Set our vars
-		string closeBraket = "";
-		if(i!=searchBars)closeBraket = ")";
-		
-		//Check all params to set right search mode
+		//Check all params to set right for each mode ( search or textField )
 		conjuctiontype = conjuctiontypeString[i];
 		reftype = reftypeString[i];
 		
-		if((conjuctiontype.empty()&&i!=searchBars))conjuctiontype = "+AND+";
-		if(i == 0)conjuctiontype = ""; //avoid to set AND fisrt position
-		//conjuctiontype = ""; //avoid to set AND after date type..
-			
+		if(conjuctiontype.empty())conjuctiontype = "+AND+";
+		if(i == 0)conjuctiontype = ""; //but avoid to set +AND+ at fisrt query item
 		if(reftype.empty())reftype = "[All%20Fields]";
 		
-		if(!myDataTypeSelected[i]){
-			//if serachText
+		string closeBraketdata = ")";
+		string closeBraket = "";
+		// if first item  or last param ( do not close brakets)
+		if(i!=searchBars || i==0){ closeBraket = ")"; }
+		//else if((i==searchBars && myDataTypeSelected[i]) ){ closeBraket = ""; }
+		else { closeBraket = ""; }
+		
+		if(!myDataTypeSelected[i]){ //normal textField data type
 			text =  textString[i];
-			//set final request to send by event
 			if(!text.empty()){
 				newEvent.query += conjuctiontype + text + reftype + closeBraket;
-				ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
 			}
 		}
-		else {
-			//else then textData related
+		else { //date type
 			datafrom = fromDateString[i];
+			bool bdate = isDate(datafrom);
 			dataTo = toDateString[i];
 			if(dataTo.empty())dataTo = getPresentData();
-			//set final request to send by event
-			if(!text.empty()){
-				newEvent.query += datetype + reftype + sMindate + datafrom + sMaxdate + dataTo;
-				ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query;
+
+			//tryParse
+						
+			if(!datafrom.empty() && bdate){
+				newEvent.query += conjuctiontype + openBraket + datafrom + reftype + bwtdates + dataTo + reftype + closeBraketdata + closeBraket;
 			}
 		}
-
+				
+		ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query << "I=" << i << endl;
 	}
 	
 	
 }
 
+//--------------------------------------------------------------
+bool guiPubMed::isDate(string name){
+	
+	bool bdate = false;
+	
+	int year;
+	int month;
+	int day;
+	
+	// Get the current searchBar number
+	if (ofIsStringInString(name, "/")){
+		vector<string> splitted	= ofSplitString(name, "/");
+		year = ofToInt(splitted[0]);
+		month = ofToInt(splitted[1]);
+		day = ofToInt(splitted[2]);
+	}
+	
+	bdate = Poco::DateTime::isValid(year, month, day);
+	
+	return bdate;
+}
+
+/*
 //--------------------------------------------------------------
 bool guiPubMed::isDateTypeSelected(string name){
 
@@ -373,7 +439,7 @@ bool guiPubMed::isDateTypeSelected(string name){
 	}
 	
 	return bFoundDataType;
-}
+}*/
 
 //--------------------------------------------------------------
 void guiPubMed::guiEvent(ofxUIEventArgs &e)

@@ -171,10 +171,11 @@ void ofxPubMed::keyPressed(int key){
 	
     //Direct Request for Test and apply with RETURN
     if(key == '1'){
-        request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&datetype=edat&mindate=1991/02/21&maxdate=2013/02/21";
+        request = "http://www.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?pubmed&term=((Pei[Author])+AND+2006/12/01[Date%20-%20Create]%3A3000[Date%20-%20Create])+AND+(2001[Date%20-%20Create]%3A3000[Date%20-%20Create])";
     }
     else if(key == '2'){
-        request = "http://www.ncbi.nlm.nih.gov/pubmed&term=aspirine&mindate=1991/02/21[pDate]&maxdate=2013/02/21[pDate]";
+        request = "http://www.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?pubmed&term=((Pei[Author])+AND+(\"2006/12/01\"[Date%20-%20Create]%3A\"3000\"[Date%20-%20Create]))+AND+(\"2001\"[Date%20-%20Create]%3A\"3000\"[Date%20-%20Create])";
+		ofLogVerbose("guiPubMed") << "request: " << request << endl;
     }
     else if(key == '3'){
         request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&reldate=60&datetype=edat&retmax=100&usehistory=y";
@@ -227,8 +228,8 @@ void ofxPubMed::applyRequest() {
     parsingSuccessful = myRequestData.open(request+retMode);
     
     if (parsingSuccessful) {
-        ofLogVerbose("guiPubMed") << cout << myRequestData.getRawString(true) << endl;
-        ofLogVerbose("guiPubMed") << cout << "Num Pubmed Results= " << myRequestData["esearchresult"]["idlist"].size() << endl;
+        ofLogVerbose("guiPubMed") << myRequestData.getRawString(true) << endl;
+        ofLogVerbose("guiPubMed") << "Num Pubmed Results= " << myRequestData["esearchresult"]["idlist"].size() << endl;
 		
 		if(myRequestData["esearchresult"]["idlist"].size() > 0)applyRequestAbstrack(myRequestData);
 
