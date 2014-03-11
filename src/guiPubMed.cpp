@@ -289,15 +289,25 @@ void guiPubMed::removeLastSearchField()
 	// Remove last search Bar
 	int i = searchBars;
 	if(i>0){
+		
 		gui->removeWidget("dropDown_"+ofToString(i));
-		gui->removeWidget("textField_"+ofToString(i));
+		
+		//detect type of search bar
+		if(!myDataTypeSelected[i]){
+			gui->removeWidget("textField_"+ofToString(i));
+			
+		}else{
+			gui->removeWidget("textFieldDataFrom_"+ofToString(i));
+			gui->removeWidget("textFieldDataTo_"+ofToString(i));
+		}
+
 		gui->removeWidget("addButton_"+ofToString(i));
+			
 		searchBars--;
 
 		// Set the last label on "-"
 		ofxUIDropDownList *add = (ofxUIDropDownList *)  gui->getWidget("addButton_"+ofToString(i-1));
 		add->setLabelText("-");
-
 	}
 }
 
@@ -327,6 +337,7 @@ int guiPubMed::countDataFilled(){
 
 //--------------------------------------------------------------
 void guiPubMed::updateRequest(){
+	
 	newEvent.query=""; //My event to fill and send
 	string conjuctiontype;
 	string reftype;
@@ -344,8 +355,7 @@ void guiPubMed::updateRequest(){
 	int searchBarsFilled = countDataFilled() -1;//Array format
 	ofLogVerbose("guiPubMed") <<"searchBarsFilled from [0..X] = " << searchBarsFilled << endl;
 		
-	//TODO Future request should select type of query to use other eSearch funcionalities
-	newEvent.query += sTerm;//set term questionarie
+	newEvent.query += sTerm; //set term questionarie
 	
 	//Set all open brakets for each searchBarsFilled
 	string openBraket = "(";
@@ -387,8 +397,6 @@ void guiPubMed::updateRequest(){
 				
 		ofLogVerbose("guiPubMed") << "Current query: " << newEvent.query << "I=" << i << endl;
 	}
-	
-	
 }
 
 //--------------------------------------------------------------

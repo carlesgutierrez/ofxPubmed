@@ -30,9 +30,6 @@ public:
 	
 private:
     
-    bool letsAddNewSearchField;
-	bool bRemoveSearchField;
-	
 	/////////
 	//USED IN APP (Visible)
     string myVisibleSelItemsArray [MAXITEMS] = {"Affiliation","All Fields", "Author", "Author-Corporate", "Author-First", "Author - Full", "Author - Identifier", "Author - Last", "Book", "Date - Completion", "Date - Create", "Date - Entrez","Date - MeSH", "Date - Modification", "Date - Publication", "EC/RN Number", "Editor", "Filter", "Grant Number", "ISBN", "Investigator", "Investigator - Full", "Issue", "Journal", "Language", "Location ID", "MeSH Major Topic", "MeSH Subheading", "Other Term", "Pagination", "Pharmacological Action", "Publication Type", "Publisher", "Secondary Source ID", "Supplementary Concept", "Text Word", "Title", "Title/Abstract", "Transliterated Title", "Volume"};
@@ -61,9 +58,6 @@ private:
 	vector<string>	reftypeString;
 	vector<string>	conjuctiontypeString;
 	
-	vector<bool>	myDataTypeSelected;
-	int countDataFilled();
-	
 	vector<string>  reftypeData;
 	vector<string>	fromDateString;
 	vector<string>	toDateString;
@@ -80,7 +74,13 @@ private:
 	bool changeDataToSearchField(int i);
 	void removeLastSearchField();
     void guiEvent(ofxUIEventArgs &e);
-
+	
+	vector<bool>	myDataTypeSelected;
+	
+	int countDataFilled();
+	
+    bool letsAddNewSearchField;
+	bool bRemoveSearchField;
 
 	int currentSearchBar;
 	int searchBars;
