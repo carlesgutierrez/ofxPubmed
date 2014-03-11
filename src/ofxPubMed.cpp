@@ -59,6 +59,9 @@ ofxPubMed::ofxPubMed(){
 	
 	//event
 	ofAddListener(guiPubMedEvent::onUpdateSearch, this, &ofxPubMed::listenerAddTextSearchBar);
+	
+	//Default mode Draw simple results
+	bDrawRawResults = true;
 }
 //--------------------------------------------------------------
 ofxPubMed::~ofxPubMed(){
@@ -76,87 +79,89 @@ void ofxPubMed::update(){
 //--------------------------------------------------------------
 void ofxPubMed::draw(){
     
-    int x = 20;
-    int y = 40;
-	
-    int bottomText = ofGetHeight()-ofGetHeight()*0.2;
-    int bottomRequest = ofGetHeight()-ofGetHeight()*0.1;
-    int rightArea = ofGetWidth()*0.2;
-	int textwidth = 130;
-	
-	int xwarnings = 150;
-	int tabwarnings = 150;
-	int accumPos = 100;
-	
-    ofSetColor(0, 0, 0);
-    ofDrawBitmapString("Request= ", x, bottomRequest);
-    ofDrawBitmapString(request, x + 80, bottomRequest); //myGuiPubMed.newEvent.query
-    
-    //Results json
-    ofDrawBitmapString("[PMID] results:", rightArea - textwidth, y);
-
-    //Draw results
-    if(myRequestData["esearchresult"]["idlist"].size()<1)
-    ofDrawBitmapString("No items founds", rightArea, y);
-    
-	//PubMed IDs found
-    for(int i=0; i< myRequestData["esearchresult"]["idlist"].size(); i++)
-	{
-		std::string text  = myRequestData["esearchresult"]["idlist"][i].asString();
-		ofDrawBitmapString(text, rightArea, i*TEXTLINEHEIGHT+y);
+	if(bDrawRawResults){
+		int x = 20;
+		int y = 40;
+		
+		int bottomText = ofGetHeight()-ofGetHeight()*0.2;
+		int bottomRequest = ofGetHeight()-ofGetHeight()*0.1;
+		int rightArea = ofGetWidth()*0.2;
+		int textwidth = 130;
+		
+		int xwarnings = 150;
+		int tabwarnings = 150;
+		int accumPos = 100;
+		
+		ofSetColor(0, 0, 0);
+		ofDrawBitmapString("Request= ", x, bottomRequest);
+		ofDrawBitmapString(request, x + 80, bottomRequest); //myGuiPubMed.newEvent.query
+		
+		//Results json
+		ofDrawBitmapString("[PMID] results:", rightArea - textwidth, y);
+		
+		//Draw results
+		if(myRequestData["esearchresult"]["idlist"].size()<1)
+			ofDrawBitmapString("No items founds", rightArea, y);
+		
+		//PubMed IDs found
+		for(int i=0; i< myRequestData["esearchresult"]["idlist"].size(); i++)
+		{
+			std::string text  = myRequestData["esearchresult"]["idlist"][i].asString();
+			ofDrawBitmapString(text, rightArea, i*TEXTLINEHEIGHT+y);
+		}
+		
+		//Draw errors
+		vector <string> errors  = myRequestData["esearchresult"]["errorlist"].getMemberNames();
+		for(int i=0; i< errors.size(); i++)
+		{
+			
+			if(i==0){
+				int numfieldsnotfound = myRequestData["esearchresult"]["errorlist"]["fieldsnotfound"].size();
+				if(numfieldsnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
+			}
+			else{
+				int numphrasesnotfound = myRequestData["esearchresult"]["errorlist"]["phrasesnotfound"].size();
+				if(numphrasesnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
+			}
+			
+		}
+		
+		//Draw Warnings
+		vector <string> warnings  = myRequestData["esearchresult"]["warninglist"].getMemberNames();
+		for(int i=0; i< warnings.size(); i++)
+		{
+			int numwarnings = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
+			if(i==0)accumPos += y + TEXTLINEHEIGHT + (i)*TEXTLINEHEIGHT;
+			
+			if(i==0){ // outputmessages
+				int numOutputMessages = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
+				if(numOutputMessages)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
+				for (int j=0; j< numOutputMessages;j++) {
+					accumPos += (j)*TEXTLINEHEIGHT;
+					ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
+				}
+			}
+			else if(i==1){ // phrasesignored
+				accumPos += TEXTLINEHEIGHT;
+				int numphrasesignored = myRequestData["esearchresult"]["warninglist"]["phrasesignored"].size();
+				if(numphrasesignored>0)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
+				for (int j=0; j< numphrasesignored;j++) {
+					accumPos += (j)*TEXTLINEHEIGHT;
+					ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["phrasesignored"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
+				}
+			}
+			else if(i==2){ // quotedphrasesnotfound
+				accumPos += TEXTLINEHEIGHT;
+				ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
+			}
+			
+		}
+		
+		if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
+		
+		//Draw Download Xml resutls
+		myAbstracts.draw(rightArea + textwidth, y);
 	}
-    
-    //Draw errors
-    vector <string> errors  = myRequestData["esearchresult"]["errorlist"].getMemberNames();
-    for(int i=0; i< errors.size(); i++)
-	{
-        
-        if(i==0){
-            int numfieldsnotfound = myRequestData["esearchresult"]["errorlist"]["fieldsnotfound"].size();
-            if(numfieldsnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
-        }
-        else{
-            int numphrasesnotfound = myRequestData["esearchresult"]["errorlist"]["phrasesnotfound"].size();
-            if(numphrasesnotfound)ofDrawBitmapString(errors[i]+":", rightArea+xwarnings, y+(i+1)*TEXTLINEHEIGHT);
-        }
-        
-    }
-    
-    //Draw Warnings
-    vector <string> warnings  = myRequestData["esearchresult"]["warninglist"].getMemberNames();
-    for(int i=0; i< warnings.size(); i++)
-	{
-        int numwarnings = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
-        if(i==0)accumPos += y + TEXTLINEHEIGHT + (i)*TEXTLINEHEIGHT;
-        
-        if(i==0){ // outputmessages
-            int numOutputMessages = myRequestData["esearchresult"]["warninglist"]["outputmessages"].size();
-            if(numOutputMessages)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
-            for (int j=0; j< numOutputMessages;j++) {
-                accumPos += (j)*TEXTLINEHEIGHT;
-                ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["outputmessages"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
-            }
-        }
-        else if(i==1){ // phrasesignored
-            accumPos += TEXTLINEHEIGHT;
-            int numphrasesignored = myRequestData["esearchresult"]["warninglist"]["phrasesignored"].size();
-            if(numphrasesignored>0)ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
-            for (int j=0; j< numphrasesignored;j++) {
-				accumPos += (j)*TEXTLINEHEIGHT;
-                ofDrawBitmapString(myRequestData["esearchresult"]["warninglist"]["phrasesignored"][j].asString(), rightArea+xwarnings+tabwarnings, accumPos);
-            }
-        }
-        else if(i==2){ // quotedphrasesnotfound
-            accumPos += TEXTLINEHEIGHT;
-            ofDrawBitmapString(warnings[i]+":", rightArea+xwarnings, accumPos);
-        }
-        
-    }
-    
-    if(!parsingSuccessful && bHitRequest)ofDrawBitmapString("Failed to parse JSON", rightArea - textwidth, y - TEXTLINEHEIGHT);
-	
-	//Draw Download Xml resutls
-	myAbstracts.draw(rightArea + textwidth, y);
 
 }
 
@@ -172,14 +177,13 @@ void ofxPubMed::keyPressed(int key){
     }
     else if(key == '2'){
         request = "http://www.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?pubmed&term=((Pei[Author])+AND+(\"2006/12/01\"[Date%20-%20Create]%3A\"3000\"[Date%20-%20Create]))+AND+(\"2001\"[Date%20-%20Create]%3A\"3000\"[Date%20-%20Create])";
-		ofLogVerbose("guiPubMed") << "request: " << request << endl;
     }
     else if(key == '3'){
         request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=cancer&reldate=60&datetype=edat&retmax=100&usehistory=y";
     }
     
-    //Progressive Request
-    // Hit 4 then 5 .. and finallt apply with RETURN
+    //Examples of a Progressive Request
+    // Hit 4 then 5 .. and finallt apply with «R«
     else if(key == '4'){
         starteSearchRequestWithItem("aspirin hart attack prevention", "[All%20Fields]");
     }
@@ -348,7 +352,16 @@ void ofxPubMed::addRelDateRequest(string reldate, string days){
 void ofxPubMed::addMinMaxDataSearchRequest(string datemin, string typedatemin, string datemax, string typedatemax){
     request += datemin + typedatemin + datemax + typedatemax;
 }
-///////////////////////
+
+//--------------------------------------------------------------
+void ofxPubMed::deActiveDrawRaw(){
+    bDrawRawResults = false;
+}
+//--------------------------------------------------------------
+void ofxPubMed::activeDrawRaw(){
+    bDrawRawResults = true;
+}
+
 
 //listener from gui
 //--------------------------------------------------------------

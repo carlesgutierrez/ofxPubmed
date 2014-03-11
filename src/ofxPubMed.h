@@ -60,8 +60,13 @@ public:
 	
 	//gui
 	guiPubMed myGuiPubMed;
+	
+	void activeDrawRaw();
+	void deActiveDrawRaw();
 
 private:
+	
+	bool bDrawRawResults;
 	
     //String for requests
 
