@@ -362,12 +362,8 @@ void guiPubMed::updateRequest(){
 		if(i == 0)conjuctiontype = ""; //but avoid to set +AND+ at fisrt query item
 		if(reftype.empty())reftype = "[All%20Fields]";
 		
-		string closeBraketdata = ")";
 		string closeBraket = "";
-		// if first item  or last param ( do not close brakets)
-		if(i!=searchBars || i==0){ closeBraket = ")"; }
-		//else if((i==searchBars && myDataTypeSelected[i]) ){ closeBraket = ""; }
-		else { closeBraket = ""; }
+		closeBraket = ")";
 		
 		if(!myDataTypeSelected[i]){ //normal textField data type
 			text =  textString[i];
@@ -376,13 +372,16 @@ void guiPubMed::updateRequest(){
 			}
 		}
 		else { //date type
+			string openBraketdate = "(";
+			string closeBraketdate = ")";
+			
 			datafrom = fromDateString[i];
 			bool bdate = isDate(datafrom);
 			dataTo = toDateString[i];
 			if(dataTo.empty())dataTo = getPresentData();
 
 			if(!datafrom.empty() && bdate){
-				newEvent.query += conjuctiontype + openBraket + datafrom + reftype + bwtdates + dataTo + reftype + closeBraketdata + closeBraket;
+				newEvent.query += conjuctiontype + openBraketdate + datafrom + reftype + bwtdates + dataTo + reftype + closeBraketdate + closeBraket;
 			}
 		}
 				
