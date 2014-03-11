@@ -19,10 +19,10 @@ ofxPubMed::ofxPubMed(){
     sBasicCitation = "ecitmatch.cgi?db=pubmed&rettype=xml&bdata=";
     
     //Search vars
-    sRelDate = "&reldate=";     //60
-    sDateType = "&datetype=";   //edat
-    sRetMax = "&datetype=";     //100
-    sUseHist = "&usehistory=";  //y
+    sRelDate = "&reldate=";
+    sDateType = "&datetype=";
+    sRetMax = "&datetype=";
+    sUseHist = "&usehistory=";
     
     //Html commands
     sSpaceCit = "%0D";
@@ -59,8 +59,6 @@ ofxPubMed::ofxPubMed(){
 	
 	//event
 	ofAddListener(guiPubMedEvent::onUpdateSearch, this, &ofxPubMed::listenerAddTextSearchBar);
-
-	
 }
 //--------------------------------------------------------------
 ofxPubMed::~ofxPubMed(){
@@ -91,12 +89,10 @@ void ofxPubMed::draw(){
 	int accumPos = 100;
 	
     ofSetColor(0, 0, 0);
-    //ofDrawBitmapString("Hit RETURN to load Request ", x, bottomText);
-    ofDrawBitmapString("Request = ", x, bottomRequest);
+    ofDrawBitmapString("Request= ", x, bottomRequest);
     ofDrawBitmapString(request, x + 80, bottomRequest); //myGuiPubMed.newEvent.query
     
     //Results json
-   
     ofDrawBitmapString("[PMID] results:", rightArea - textwidth, y);
 
     //Draw results
@@ -168,6 +164,7 @@ void ofxPubMed::draw(){
 void ofxPubMed::keyPressed(int key){
 
 	myGuiPubMed.keyPressed(key);
+	myAbstracts.keyPressed(key); // press 's' for save xml file results
 	
     //Direct Request for Test and apply with RETURN
     if(key == '1'){
@@ -203,17 +200,14 @@ void ofxPubMed::keyPressed(int key){
         addDataTagRequest("1991","2014", "[All%20Fields]");
     }
 	
-	if(key == 'R')applyRequest();
+	if(key == 'R'){
+		applyRequest(); // fast tests using 1,2,3... options
+		//General Request is under construction
+		bHitRequest = false;
+	}
     
-    //General Request is under construction
-    bHitRequest = false;
-    
-    //Apply request Type
-    //Add Json request
-    if(key == OF_KEY_RETURN){
-		//apply manual request?
-    }
 
+    
     //Reset actual request
     if(key == 127)request="";
 }

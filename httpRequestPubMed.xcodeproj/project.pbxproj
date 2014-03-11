@@ -203,6 +203,7 @@
 		832BDC407620CDBA568B713D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxmlerror.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
 		8401259018C5034A003FF280 /* xmlAbstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlAbstract.cpp; sourceTree = "<group>"; };
 		8401259118C5034A003FF280 /* xmlAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlAbstract.h; sourceTree = "<group>"; };
+		840125A418CF0E1D003FF280 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = SOURCE_ROOT; };
 		8422373318BFFAA0009CE9EC /* guiPubMedEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiPubMedEvent.cpp; sourceTree = "<group>"; };
 		8422373418BFFAA0009CE9EC /* guiPubMedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiPubMedEvent.h; sourceTree = "<group>"; };
 		856BF5AB0322D0689EE63829 /* ofxUIRangeSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRangeSlider.h; path = ../../../addons/ofxUI/src/ofxUIRangeSlider.h; sourceTree = SOURCE_ROOT; };
@@ -691,6 +692,7 @@
 				8422373418BFFAA0009CE9EC /* guiPubMedEvent.h */,
 				8401259018C5034A003FF280 /* xmlAbstract.cpp */,
 				8401259118C5034A003FF280 /* xmlAbstract.h */,
+				840125A418CF0E1D003FF280 /* README */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

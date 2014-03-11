@@ -11,11 +11,12 @@
 //--------------------------------------------------------------
 xmlAbstract::xmlAbstract(){
 	counterSavedXmls = 0;
-	vPmids.reserve(20);
-	vTitles.reserve(20);
-	vAbstractTexts.reserve(20);
-	vAuthors.reserve(20);
-	vPublicationTypes.reserve(20);
+	vPmids.reserve(MAXRET);
+	vTitles.reserve(MAXRET);
+	vAbstractTexts.reserve(MAXRET);
+	//vAuthors.reserve(MAXRET);
+	//vPublicationTypes.reserve(MAXRET);
+	//vAuthorsLastNanme.reserve(MAXRET);
 }
 //--------------------------------------------------------------
 xmlAbstract::~xmlAbstract(){
@@ -65,6 +66,13 @@ void xmlAbstract::draw(int x, int y){
 }
 
 //-------------------------------------------------------
+void xmlAbstract::keyPressed(int key){
+	if(key == 's'){
+		saveXml();
+	}
+}
+
+//-------------------------------------------------------
 void xmlAbstract::saveXml(){
 	//string filename = "file"+ofToString(counterSavedXmls,0)+".xml";
     string filename = "file.xml";
@@ -96,8 +104,8 @@ void xmlAbstract::resetInfo(){
 	vTitles.clear();
 	vAbstractTexts.clear();
 	vPmids.clear();
-	vAuthors.clear();
-	vPublicationTypes.clear();
+	//vPublicationTypes.clear();
+	//vAuthorsLastNanme.clear();
 }
 
 //--------------------------------------------------------------
@@ -130,6 +138,29 @@ void xmlAbstract::getInfoAbstracts(ofxXmlSettings myxml){
 		vAbstractTexts.push_back(sArticleAbstrack);
 		
 		myxml.popTag();//5
+		
+		//Authors
+		/*
+		myxml.pushTag("AuthorList"); //5
+		
+		int numAuthors = myxml.getNumTags("Author");
+		for(int j=0; j< numAuthors; j++){
+			myxml.pushTag("Author"); //6
+			
+			string sAuthor = myxml.getValue("LastName", "default");
+			vAuthorsLastNanme.push_back(sArticleAbstrack);
+			
+			myxml.popTag();//6
+		}
+		
+		myxml.popTag();//5
+		 
+		 // for fill vPublicationTypes
+		 // (push)PublicationTypeList
+		 // (get)PublicationType
+		 
+		*/
+		
 		myxml.popTag();//4
 		myxml.popTag();//3
 		myxml.popTag();//2
@@ -143,11 +174,31 @@ void xmlAbstract::getInfoAbstracts(ofxXmlSettings myxml){
 }
 
 //--------------------------------------------------------------
+vector<string> xmlAbstract::getTitle() {
+	return vTitles;
+}
+
+//--------------------------------------------------------------
+vector<string> xmlAbstract::getAbstractTexts() {
+	return vAbstractTexts;
+}
+
+//--------------------------------------------------------------
+vector<string> xmlAbstract::getPubIds() {
+	return vPmids;
+}
+
+//--------------------------------------------------------------
+//vector<string>  getAuthors(); {
+//	return vAuthorsLastNanme; //TODO Authors should be vectors of vectors of authors names // There are more than one for each article..
+//}
+
+
+//--------------------------------------------------------------
 void xmlAbstract::urlResponse(ofHttpResponse & response) {
     if (response.status==200 && response.request.name == "async_req") {
         myxml.loadFromBuffer(response.data.getBinaryBuffer());
         bLoading = false;
-		saveXml();//save results with an active counter file0, file1, file2...
 		
 		getInfoAbstracts(myxml);
 

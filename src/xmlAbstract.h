@@ -11,6 +11,8 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 
+#define MAXRET 20
+
 class xmlAbstract {
 	
 public:
@@ -24,6 +26,8 @@ public:
 	void registerURL();
 	void unRegisterURL();
 	
+	void keyPressed(int key);
+	
 	void resetInfo();
 
 	void saveXml();
@@ -36,6 +40,13 @@ public:
 	ofHttpResponse httpResponse;
 	void urlResponse(ofHttpResponse & response);
 	
+	//geters
+	vector<string> getTitle();
+	vector<string>  getAbstractTexts();
+	vector<string>  getPubIds();
+	//vector<string>  getAuthors();
+	
+	
 private:
 
 	int numIds;
@@ -46,6 +57,7 @@ private:
 	vector<string> vPmids;
 	vector<string> vTitles;
 	vector<string> vAbstractTexts;
-	vector<string> vAuthors;
-	vector<string> vPublicationTypes;
+
+	//vector<string> vPublicationTypes;
+	//vector<string> 	vAuthorsLastNanme;
 };

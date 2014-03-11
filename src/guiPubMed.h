@@ -21,8 +21,12 @@ public:
 
 	void update();
 	void keyPressed(int key);
-	//if this would be called as static, will save last values used...
+	
 	guiPubMedEvent newEvent;
+	
+	//some utils necesary for this GUI
+	bool isDate(string name);
+	string getPresentData();
 	
 private:
     
@@ -41,14 +45,11 @@ private:
     vector<string> myVisibleDatasSelItems;
 	string andOrNotArray [MAXadd] = {"And", "Or", "Not", "-"};
     vector<string> andOrNot;
+	
 	/////////
-	//TO SEND TO HTTP (Request)
-	//USED IN REQUEST
+	//TO SEND TO HTTP (raw Request)
     string myRequestSelItemsArray[MAXITEMS] = {"[Affiliation]","[All%20Fields]", "[Author]", "[Author%20-%20Corporate]", "[Author%20-%20First]", "[Author%20-%20Full]", "[Author%20- Identifier]", "[Author%20-%20Last]", "[Book]", "[Date%20-%20Completion]", "[Date%20-%20Create]", "[Date%20-%20Entrez]","[Date%20-%20MeSH]", "[Date%20-%20Modification]", "[Date%20-%20Publication]", "[EC/RN%20Number]", "[Editor]", "[Filter]", "[Grant%20Number]", "[ISBN]", "[Investigator]", "[Investigator%20-%20Full]", "[Issue]", "[Journal]", "[Language]", "[Location%20ID]", "[MeSH%20Major%20Topic]", "[MeSH%20Subheading", "[Other%20Term]", "[Pagination]", "[Pharmacological%20Action]", "[Publication%20Type]", "[Publisher]", "[Secondary%20Source ID]", "[Supplementary%20Concept]", "[Text%20Word]", "[Title]", "[Title/Abstract]", "[Transliterated%20Title]", "[Volume]"};
     vector<string> myRequestSelItems;
-    
-   // string myRequestDataSelItemsArray[MAXITEMSDATAS] = { "[DCOM]", "[DA]", "[EDAT]","[MHDA]", "[Date%20-%20Modification]", "[DP]"};
-   // vector<string> myRequestDataSelItems;
 		
 	string andOrNotRequestedArray [MAXadd] = {"+AND+", "+OR+", "+NOT+", "-"}; 
 	vector<string> andOrNotRequest;
@@ -61,7 +62,6 @@ private:
 	vector<string>	conjuctiontypeString;
 	
 	vector<bool>	myDataTypeSelected;
-	bool isDate(string name);
 	int countDataFilled();
 	
 	vector<string>  reftypeData;
@@ -80,9 +80,7 @@ private:
 	bool changeDataToSearchField(int i);
 	void removeLastSearchField();
     void guiEvent(ofxUIEventArgs &e);
-	
-	//utils for this GUI
-	string getPresentData();
+
 
 	int currentSearchBar;
 	int searchBars;

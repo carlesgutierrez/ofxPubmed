@@ -26,7 +26,8 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    myPubMed.keyPressed(key);
+    
+	myPubMed.keyPressed(key);
 	
 	if(key == OF_KEY_F1){
 		ofSetLogLevel(OF_LOG_SILENT);
