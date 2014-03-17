@@ -1,0 +1,414 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2014//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_140101.dtd">
+<PubmedArticleSet>
+    <PubmedArticle>
+        <MedlineCitation Owner="NLM" Status="MEDLINE">
+            <PMID Version="1">18163870</PMID>
+            <DateCreated>
+                <Year>2007</Year>
+                <Month>12</Month>
+                <Day>31</Day>
+            </DateCreated>
+            <DateCompleted>
+                <Year>2008</Year>
+                <Month>02</Month>
+                <Day>21</Day>
+            </DateCompleted>
+            <Article PubModel="Print">
+                <Journal>
+                    <ISSN IssnType="Print">1531-1074</ISSN>
+                    <JournalIssue CitedMedium="Print">
+                        <Volume>7</Volume>
+                        <Issue>6</Issue>
+                        <PubDate>
+                            <Year>2007</Year>
+                            <Month>Dec</Month>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>Astrobiology</Title>
+                    <ISOAbbreviation>Astrobiology</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>Temporal changes in fluid chemistry and energy profiles in the vulcano island hydrothermal system.</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>905-32</MedlinePgn>
+                </Pagination>
+                <ELocationID EIdType="doi" ValidYN="Y">10.1089/ast.2007.0128</ELocationID>
+                <Abstract>
+                    <AbstractText>In June 2003, the geochemical composition of geothermal fluids was determined at 9 sites in the Vulcano hydrothermal system, including sediment seeps, geothermal wells, and submarine vents. Compositional data were combined with standard state reaction properties to determine the overall Gibbs free energy (DeltaG(r) ) for 120 potential lithotrophic and heterotrophic reactions. Lithotrophic reactions in the H-O-N-S-C-Fe system were considered, and exergonic reactions yielded up to 120 kJ per mole of electrons transferred. The potential for heterotrophy was characterized by energy yields from the complete oxidation of 6 carboxylic acids- formic, acetic, propanoic, lactic, pyruvic, and succinic-with the following redox pairs: O(2)/H(2)O, SO(4) (2)/H(2)S, NO(3) ()/NH(4) (+), S(0)/H(2)S, and Fe(3)O(4)/Fe(2+). Heterotrophic reactions yielded 6-111 kJ/mol e(). Energy yields from both lithotrophic and heterotrophic reactions were highly dependent on the terminal electron acceptor (TEA); reactions with O(2) yielded the most energy, followed by those with NO(3) (), Fe(III), SO(4) (2), and S(0). When only reactions with complete TEA reduction were included, the exergonic lithotrophic reactions followed a similar electron tower. Spatial variability in DeltaG(r) was significant for iron redox reactions, owing largely to the wide range in Fe(2+) and H(+) concentrations. Energy yields were compared to those obtained for samples collected in June 2001. The temporal variations in geochemical composition and energy yields observed in the Vulcano hydrothermal system between 2001 and 2003 were moderate. The largest differences in DeltaG(r) over the 2 years were from iron redox reactions, due to temporal changes in the Fe(2+) and H(+) concentrations. The observed variations in fluid composition across the Vulcano hydrothermal system have the potential to influence not only microbial diversity but also the metabolic strategies of the resident microbial communities.</AbstractText>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Rogers</LastName>
+                        <ForeName>Karyn L</ForeName>
+                        <Initials>KL</Initials>
+                        <Affiliation>Department of Earth and Planetary Sciences, Washington University, St. Louis, Missouri, USA. krogers@whoi.edu</Affiliation>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Amend</LastName>
+                        <ForeName>Jan P</ForeName>
+                        <Initials>JP</Initials>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Gurrieri</LastName>
+                        <ForeName>Sergio</ForeName>
+                        <Initials>S</Initials>
+                    </Author>
+                </AuthorList>
+                <Language>eng</Language>
+                <PublicationTypeList>
+                    <PublicationType>Journal Article</PublicationType>
+                    <PublicationType>Research Support, Non-U.S. Gov&apos;t</PublicationType>
+                    <PublicationType>Research Support, U.S. Gov&apos;t, Non-P.H.S.</PublicationType>
+                </PublicationTypeList>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>United States</Country>
+                <MedlineTA>Astrobiology</MedlineTA>
+                <NlmUniqueID>101088083</NlmUniqueID>
+                <ISSNLinking>1557-8070</ISSNLinking>
+            </MedlineJournalInfo>
+            <CitationSubset>IM</CitationSubset>
+            <MeshHeadingList>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Archaea</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">metabolism</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Bacteria</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">metabolism</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Ecosystem</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="Y">Energy Metabolism</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Geologic Sediments</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Seawater</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">chemistry</QualifierName>
+                    <QualifierName MajorTopicYN="Y">microbiology</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Thermodynamics</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Water Microbiology</DescriptorName>
+                </MeshHeading>
+            </MeshHeadingList>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2008</Year>
+                    <Month>1</Month>
+                    <Day>1</Day>
+                    <Hour>9</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2008</Year>
+                    <Month>2</Month>
+                    <Day>22</Day>
+                    <Hour>9</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2008</Year>
+                    <Month>1</Month>
+                    <Day>1</Day>
+                    <Hour>9</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="doi">10.1089/ast.2007.0128</ArticleId>
+                <ArticleId IdType="pubmed">18163870</ArticleId>
+            </ArticleIdList>
+        </PubmedData>
+    </PubmedArticle>
+    <PubmedArticle>
+        <MedlineCitation Owner="NLM" Status="MEDLINE">
+            <PMID Version="1">15328783</PMID>
+            <DateCreated>
+                <Year>2004</Year>
+                <Month>08</Month>
+                <Day>26</Day>
+            </DateCreated>
+            <DateCompleted>
+                <Year>2004</Year>
+                <Month>11</Month>
+                <Day>04</Day>
+            </DateCompleted>
+            <DateRevised>
+                <Year>2004</Year>
+                <Month>11</Month>
+                <Day>17</Day>
+            </DateRevised>
+            <Article PubModel="Print">
+                <Journal>
+                    <ISSN IssnType="Print">0095-6562</ISSN>
+                    <JournalIssue CitedMedium="Print">
+                        <Volume>75</Volume>
+                        <Issue>8</Issue>
+                        <PubDate>
+                            <Year>2004</Year>
+                            <Month>Aug</Month>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>Aviation, space, and environmental medicine</Title>
+                    <ISOAbbreviation>Aviat Space Environ Med</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>Dysbaric osteonecrosis screening in submarine escape instructors.</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>673-5</MedlinePgn>
+                </Pagination>
+                <Abstract>
+                    <AbstractText Label="INTRODUCTION" NlmCategory="BACKGROUND">Dysbaric osteonecrosis (DON) is an avascular bone necrosis that can be seen in divers and compressed air workers. Submarine escape instructors constitute a specific group who are exposed to hyperbaric conditions with a constant profile.</AbstractText>
+                    <AbstractText Label="METHODS" NlmCategory="METHODS">We screened 21 Turkish Navy submarine escape instructors and evaluated 147 skeletal radiographs for dysbaric osteonecrosis. Two instructors who had suspicious DON lesions on the X-rays underwent examination by MRI of the suspected sites.</AbstractText>
+                    <AbstractText Label="RESULTS" NlmCategory="RESULTS">We found no evidence of DON in the radiographs and MRIs of the submarine escape instructors.</AbstractText>
+                    <AbstractText Label="DISCUSSION" NlmCategory="CONCLUSIONS">We concluded that the risk of DON is very low for submarine escape instructors who work at the Submarine Escape Training Tower (SETT) at a depth of 60 ft and who strictly obey the decompression rules.</AbstractText>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Yildiz</LastName>
+                        <ForeName>Senol</ForeName>
+                        <Initials>S</Initials>
+                        <Affiliation>Gülhane Military Medical Academy Haydarpasa Training Hospital, Department of Underwater and Hyperbaric Medicine, Istanbul, Turkey. syildiz@gata.edu.tr</Affiliation>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Cimsit</LastName>
+                        <ForeName>Cagatay</ForeName>
+                        <Initials>C</Initials>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Toklu</LastName>
+                        <ForeName>Akin Savas</ForeName>
+                        <Initials>AS</Initials>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Cimsit</LastName>
+                        <ForeName>Maide</ForeName>
+                        <Initials>M</Initials>
+                    </Author>
+                </AuthorList>
+                <Language>eng</Language>
+                <PublicationTypeList>
+                    <PublicationType>Journal Article</PublicationType>
+                </PublicationTypeList>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>United States</Country>
+                <MedlineTA>Aviat Space Environ Med</MedlineTA>
+                <NlmUniqueID>7501714</NlmUniqueID>
+                <ISSNLinking>0095-6562</ISSNLinking>
+            </MedlineJournalInfo>
+            <CitationSubset>IM</CitationSubset>
+            <CitationSubset>S</CitationSubset>
+            <MeshHeadingList>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Adult</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Barotrauma</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">epidemiology</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Comorbidity</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Diving</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">statistics &amp; numerical data</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Humans</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Hyperbaric Oxygenation</DescriptorName>
+                    <QualifierName MajorTopicYN="N">statistics &amp; numerical data</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Military Personnel</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">statistics &amp; numerical data</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Osteonecrosis</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">epidemiology</QualifierName>
+                    <QualifierName MajorTopicYN="Y">radiography</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Prevalence</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N" Type="Geographic">Turkey</DescriptorName>
+                    <QualifierName MajorTopicYN="N">epidemiology</QualifierName>
+                </MeshHeading>
+            </MeshHeadingList>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2004</Year>
+                    <Month>8</Month>
+                    <Day>27</Day>
+                    <Hour>5</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2004</Year>
+                    <Month>11</Month>
+                    <Day>5</Day>
+                    <Hour>9</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2004</Year>
+                    <Month>8</Month>
+                    <Day>27</Day>
+                    <Hour>5</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">15328783</ArticleId>
+            </ArticleIdList>
+        </PubmedData>
+    </PubmedArticle>
+    <PubmedArticle>
+        <MedlineCitation Owner="NLM" Status="MEDLINE">
+            <PMID Version="1">12838773</PMID>
+            <DateCreated>
+                <Year>2003</Year>
+                <Month>07</Month>
+                <Day>03</Day>
+            </DateCreated>
+            <DateCompleted>
+                <Year>2003</Year>
+                <Month>10</Month>
+                <Day>02</Day>
+            </DateCompleted>
+            <DateRevised>
+                <Year>2013</Year>
+                <Month>11</Month>
+                <Day>21</Day>
+            </DateRevised>
+            <Article PubModel="Print">
+                <Journal>
+                    <ISSN IssnType="Print">0035-9033</ISSN>
+                    <JournalIssue CitedMedium="Print">
+                        <Volume>88</Volume>
+                        <Issue>3</Issue>
+                        <PubDate>
+                            <Year>2002</Year>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>Journal of the Royal Naval Medical Service</Title>
+                    <ISOAbbreviation>J R Nav Med Serv</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>Submarine escape trials 1999-2001--provision of medical support.</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>108-15</MedlinePgn>
+                </Pagination>
+                <Abstract>
+                    <AbstractText>Since the early 1960s all Royal Navy submarines have been fitted with an escape system comprising a single escape tower (SET) and submarine escape immersion suit (SEIS). This system enables escape from a submarine at a depth of 180 metres (1.9 MPa) provided that the submarine compartment is at a pressure of no greater than 1 bar (0.1 MPa). Due to a variety of causes which may include flooding and leakage of high pressure air systems it is the highly probable that the submarine compartment will be at a pressure in excess of 1 bar (0.1 MPa) at the time of the escape. To investigate and determine what constitutes a &apos;safe&apos; maximum escape depth from any given compartment pressure (the safe to escape curve), a purpose built chamber complex, the Submarine Escape Simulator (SES) has been constructed at the QinetiQ, formerly the Defence Evaluation and Research Agency (DERA), Alverstoke site. Unlike escapes from a submarine where once released from the submarine the escapee&apos;s ascent can not be halted, within the SES it is possible to halt the ascent phase. This article describes the systems and procedures developed to enable medical support to be provided rapidly to a subject at any stage of the compression decompression profile. The article also provides details of the results to date that have been obtained from this work.</AbstractText>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Benton</LastName>
+                        <ForeName>Peter</ForeName>
+                        <Initials>P</Initials>
+                    </Author>
+                </AuthorList>
+                <Language>eng</Language>
+                <PublicationTypeList>
+                    <PublicationType>Journal Article</PublicationType>
+                </PublicationTypeList>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>England</Country>
+                <MedlineTA>J R Nav Med Serv</MedlineTA>
+                <NlmUniqueID>7503111</NlmUniqueID>
+                <ISSNLinking>0035-9033</ISSNLinking>
+            </MedlineJournalInfo>
+            <ChemicalList>
+                <Chemical>
+                    <RegistryNumber>S88TT14065</RegistryNumber>
+                    <NameOfSubstance>Oxygen</NameOfSubstance>
+                </Chemical>
+            </ChemicalList>
+            <CitationSubset>IM</CitationSubset>
+            <MeshHeadingList>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="Y">Decompression</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Decompression Sickness</DescriptorName>
+                    <QualifierName MajorTopicYN="N">etiology</QualifierName>
+                    <QualifierName MajorTopicYN="Y">therapy</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Emergency Medical Services</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">supply &amp; distribution</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N" Type="Geographic">Great Britain</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Humans</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Inert Gas Narcosis</DescriptorName>
+                    <QualifierName MajorTopicYN="N">etiology</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="Y">Military Personnel</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Oxygen</DescriptorName>
+                    <QualifierName MajorTopicYN="N">poisoning</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="Y">Protective Devices</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName MajorTopicYN="N">Submarine Medicine</DescriptorName>
+                    <QualifierName MajorTopicYN="Y">instrumentation</QualifierName>
+                    <QualifierName MajorTopicYN="N">organization &amp; administration</QualifierName>
+                </MeshHeading>
+            </MeshHeadingList>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2003</Year>
+                    <Month>7</Month>
+                    <Day>4</Day>
+                    <Hour>5</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2003</Year>
+                    <Month>10</Month>
+                    <Day>3</Day>
+                    <Hour>5</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2003</Year>
+                    <Month>7</Month>
+                    <Day>4</Day>
+                    <Hour>5</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">12838773</ArticleId>
+            </ArticleIdList>
+        </PubmedData>
+    </PubmedArticle>
+</PubmedArticleSet>
