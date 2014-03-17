@@ -1,18 +1,35 @@
-////////////////////////////////////////////////////////////////
-//Readme:
-//
-////////////////////////////////////////////////////////////////
+ofxPubmed
+========
 
+![Screenshot](https://github.com/carlesgutierrez/ofxPubmed/raw/master/screen.png)
 
- This addon is created to get a Html response with the data requested from a
- personalized gui. This GUi has been created follwing the modus operanding from 
- advanced Pubmed search. 
+#Description
+Library for request to Pubmed. Include example using a GUI for interact as advanced web mode.
+
+ This addon is created to get a Html response with the data requested from a personalized gui. This GUi has been created follwing the modus operanding from advanced Pubmed search. 
   
- Following manual has many other tools to explore by pubmed.
- Actual project is just using eSearch tool. Manual stepts for eSearch works properly,
- but anyway advanced search bar (http://www.ncbi.nlm.nih.gov/pubmed/advanced) as modus
- operanding has been folowed to it. And there is not official documentation for this, just
- the webside bar and logical request construction and the advanced name parameters.
+ Pubmed has many other tools of use. This add-on is just using eSearch tool. Manual steps for eSearch works properly, but anyway an advanced search bar (http://www.ncbi.nlm.nih.gov/pubmed/advanced) as modus operanding has been followed to it. And there is not official documentation for this, just the webside bar and logical request construction and the advanced name parameters.
+
+
+The demo requires: 
+
+openFrameworks https://github.com/openframeworks/openFrameworks 
+ofxUI
+ofxJson
+ofxFTGL
+
+Play clone add ons to get each personal addons (ofxUI its not the official)
+
+#Use
+Play the example (much esier) or used public methods to build your own request. 
+
+#License
+xxx?
+NLM leases the following data to U.S. and non-US individuals or organizations per the License Agreement at http://www.nlm.nih.gov/databases/license/license.pdf (printable version): MEDLINE/PubMed®
+
+
+----
+Technical Documentation......(very long sorry)
 
  Types of search param:
  
